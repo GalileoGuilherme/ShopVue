@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">ViewClient</router-link> |
-      <router-link to="/about">BackOffice</router-link>
+    <nav class="header">
+      <router-link to="/" class="header-link">ViewClient</router-link> |
+      <router-link to="/about" class="header-link">BackOffice</router-link>
     </nav>
     <router-view/>
   </div>
@@ -17,16 +17,28 @@
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+.header {
+  background-color: #42b983;
+  padding: 20px;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  margin-bottom: 20px;
 }
 
-nav a {
+.header-link {
   font-weight: bold;
+  color: #fff; 
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.3s;
+}
+
+.header-link:hover {
   color: #2c3e50;
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #529e7c;
 }
 </style>

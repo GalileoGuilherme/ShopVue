@@ -1,28 +1,34 @@
 <template>
   <div>
-    <h1 class="header">{{ msg }}</h1>
     <div v-if="loading" class="loader">Carregando...</div>
 
     <!-- Seletor de produtos com caixas de seleção -->
     <div class="product-selector">
       <h2>Selecione os produtos para mostrar na view do cliente:</h2>
-      <ul class="product-list">
-        <li v-for="product in products" :key="product.id" class="product-item">
-          <label>
-            <input
-              type="checkbox"
-              v-model="selectedProducts"
-              :value="product"
-            />
-            {{ product.title }}
-          </label>
-        </li>
-      </ul>
+      <table class="product-table">
+        <tbody>
+          <tr v-for="product in products" :key="product.id">
+            <td>{{ product.title }}</td>
+            <td>
+              <button @click="editProduct(product)">Editar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
+    <button @click="openProductForm">Adicionar Produto</button>
+
+    <!-- Modal de adição/edição de produtos -->
+    <div v-if="isProductFormVisible" class="product-form">
+      <!-- Resto do código do modal -->
+    </div>
+
+    <!-- Botão para enviar os dados -->
     <button @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -38,6 +44,13 @@ export default {
       showModal: false,
       selectedProducts: [],
       loading: false,
+      isProductFormVisible: false,
+      product: {
+        title: "",
+        description: "",
+        price: 0,
+      },
+      editMode: false,
     };
   },
   mounted() {
@@ -55,52 +68,103 @@ export default {
         this.loading = false;
       }
     },
+    openProductForm() {
+      this.isProductFormVisible = true;
+      this.editMode = false;
+      this.resetForm();
+    },
+    closeProductForm() {
+      this.isProductFormVisible = false;
+      this.resetForm();
+    },
+    resetForm() {
+      this.product = {
+        title: "",
+        description: "",
+        price: 0,
+      };
+    },
+    saveProduct() {
+      if (this.editMode) {
+        // Lógica para editar o produto
+        // Implemente sua lógica de edição aqui
+      } else {
+        // Lógica para adicionar o produto
+        // Implemente sua lógica de adição aqui
+
+        // Após adicionar o produto, você pode atualizar a lista de produtos
+        // Para este exemplo, vamos apenas adicionar o produto à lista
+        this.products.push({ ...this.product });
+      }
+
+      // Feche o formulário após adicionar/editar o produto
+      this.closeProductForm();
+    },
+    editProduct(product) {
+      // Abra o formulário no modo de edição com os dados do produto selecionado
+      this.product = { ...product };
+      this.editMode = true;
+      this.isProductFormVisible = true;
+    },
     sendSelectedProducts() {
+      // Lógica para enviar os produtos selecionados
       console.log(this.selectedProducts);
       this.$store.dispatch(
         "products/updateSelectedProducts",
         this.selectedProducts
       );
-      // this.selectedProducts = [];
     },
-    ...mapActions("selectedProducts", ["updateSelectedProducts"]),
   },
 };
 </script>
 
-
 <style scoped>
-.product-selector {
-  text-align: left;
-}
-
-.product-item {
+/* Estilos CSS para o modal */
+.product-form {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  max-height: 50px;
+  justify-content: center;
 }
 
-.product-item label {
-  margin-left: 10px;
-}
-
-.header {
-  font-size: 24px;
+.product-form h2 {
   text-align: center;
-  margin-bottom: 20px;
 }
 
-.product-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  padding-left: 20px; /* Adicione um recuo à esquerda para os itens da lista */
+.product-form form {
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
 }
 
-.loader {
-  text-align: center;
-  font-size: 30px;
-  margin-top: 50px;
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-group button {
+  margin-top: 10px;
 }
 </style>
