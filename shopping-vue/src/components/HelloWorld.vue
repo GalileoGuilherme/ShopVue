@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1 class="header">{{ msg }}</h1>
+    <div v-if="loading" class="loader">Carregando...</div>
     <ul class="product-list">
       <li v-for="product in products" :key="product.id" class="product-item">
         <div class="product-image">
@@ -19,7 +20,7 @@
       </li>
     </ul>
 
-    <!-- Modal para -->
+    <!-- Modal -->
     <div class="modal" v-if="showModal">
       <div class="modal-content">
         <h2>{{ selectedProduct.title }}</h2>
@@ -42,6 +43,7 @@ export default {
       products: [],
       showModal: false,
       selectedProduct: null,
+      loading: false,
     };
   },
   mounted() {
@@ -49,11 +51,14 @@ export default {
   },
   methods: {
     async fetchProducts() {
+      this.loading = true;
       try {
         const response = await axios.get("https://fakestoreapi.com/products");
         this.products = response.data;
       } catch (error) {
         console.error("Erro ao buscar a lista de produtos:", error);
+      } finally {
+        this.loading = false;
       }
     },
     showProductDetails(product) {
@@ -128,5 +133,11 @@ export default {
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.loader {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 50px;
 }
 </style>
