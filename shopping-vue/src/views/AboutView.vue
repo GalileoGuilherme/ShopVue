@@ -21,13 +21,12 @@
     </div>
 
     <button @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
-
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import { mapActions } from 'vuex';
+import axios from "axios";
+import { mapActions } from "vuex";
 
 export default {
   props: {
@@ -48,20 +47,23 @@ export default {
     async fetchProducts() {
       this.loading = true;
       try {
-        const response = await axios.get('https://fakestoreapi.com/products');
+        const response = await axios.get("https://fakestoreapi.com/products");
         this.products = response.data;
       } catch (error) {
-        console.error('Erro ao buscar a lista de produtos:', error);
+        console.error("Erro ao buscar a lista de produtos:", error);
       } finally {
         this.loading = false;
       }
     },
     sendSelectedProducts() {
       console.log(this.selectedProducts);
-      this.$store.dispatch("products/updateSelectedProducts", this.selectedProducts);
+      this.$store.dispatch(
+        "products/updateSelectedProducts",
+        this.selectedProducts
+      );
       // this.selectedProducts = [];
     },
-    ...mapActions('selectedProducts', ['updateSelectedProducts']),
+    ...mapActions("selectedProducts", ["updateSelectedProducts"]),
   },
 };
 </script>
@@ -76,6 +78,7 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  max-height: 50px;
 }
 
 .product-item label {

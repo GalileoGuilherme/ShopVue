@@ -2,7 +2,11 @@
 <template>
   <div>
     <div class="product-grid">
-      <div v-for="product in getSelectedProducts" :key="product.id" class="product-item">
+      <div
+        v-for="product in getSelectedProducts"
+        :key="product.id"
+        class="product-item"
+      >
         <img :src="product.image" :alt="product.title" class="product-image" />
         <h3 class="product-title">{{ product.title }}</h3>
         <p class="product-description">{{ product.description }}</p>
@@ -12,28 +16,23 @@
   </div>
 </template>
 
-
-
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   methods: {
-    // Use mapActions para chamar a ação do Vuex para atualizar os produtos selecionados
-    ...mapActions('products', ['updateSelectedProducts']),
+    ...mapActions("products", ["updateSelectedProducts"]),
   },
   computed: {
-    // Use mapGetters para acessar os produtos selecionados do Vuex
-    ...mapGetters('products', ['getSelectedProducts']),
+    ...mapGetters("products", ["getSelectedProducts"]),
   },
 };
 </script>
 
 <style scoped>
-
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
 }
 
@@ -61,5 +60,4 @@ export default {
   font-weight: bold;
   margin-top: 5px;
 }
-
 </style>
