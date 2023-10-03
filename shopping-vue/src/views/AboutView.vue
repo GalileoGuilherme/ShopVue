@@ -8,7 +8,14 @@
       <table class="product-table">
         <tbody>
           <tr v-for="product in products" :key="product.id">
-            <td>{{ product.title }}</td>
+            <td>
+              <input
+                type="checkbox"
+                v-model="selectedProducts"
+                :value="product"
+              />
+            </td>
+            <td class="left-align">{{ product.title }}</td>
             <td>
               <button @click="editProduct(product)">Editar</button>
             </td>
@@ -30,14 +37,14 @@
 </template>
 
 
+
+
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
+// import { mapActions } from "vuex";
 
 export default {
-  props: {
-    msg: String,
-  },
+
   data() {
     return {
       products: [],
@@ -133,6 +140,11 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
+.product-table td:first-child {
+  text-align: left;
+}
+
 
 .product-form h2 {
   text-align: center;
