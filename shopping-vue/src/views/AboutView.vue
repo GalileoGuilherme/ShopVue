@@ -2,58 +2,65 @@
   <div>
     <div v-if="loading" class="loader">Carregando...</div>
 
-    <!-- Seletor de produtos com caixas de seleção -->
-    <div class="product-selector">
-      <h2>Selecione os produtos para mostrar na view do cliente:</h2>
-      <table class="product-table">
-        <tbody>
-          <tr v-for="product in products" :key="product.id">
-            <td>
-              <input
-                type="checkbox"
-                v-model="selectedProducts"
-                :value="product"
-              />
-            </td>
-            <td class="left-align">{{ product.title }}</td>
-            <td>
-              <button @click="editProduct(product)">Editar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <button @click="openProductForm">Adicionar Produto</button>
-
-    <!-- Modal de adição/edição de produtos -->
-    <div v-if="isProductFormVisible" class="product-form">
-      <h2>{{ editMode ? "Editar Produto" : "Adicionar Produto" }}</h2>
-      <form @submit.prevent="saveProduct">
-        <div class="form-group">
-          <label for="title">Título:</label>
-          <input type="text" v-model="product.title" id="title" required />
-        </div>
-        <div class="form-group">
-          <label for="description">Descrição:</label>
-          <textarea v-model="product.description" id="description"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="price">Preço:</label>
-          <input type="text" v-model="product.price" id="price" required />
-        </div>
-        <div class="form-group">
-          <label for="image">Imagem:</label>
-          <input type="file" @change="onImageChange" id="image" accept="image/*" />
+    <!-- Grid de produtos -->
+    <div class="product-grid">
+      <div v-for="product in products" :key="product.id" class="product-card">
+        <input
+          type="checkbox"
+          v-model="selectedProducts"
+          :value="product"
+          class="product-checkbox"
+        />
+        <div class="product-details">
           <img :src="product.image" alt="Imagem do produto" class="product-image" />
+          <div class="product-info">
+            <h3 class="product-title">{{ product.title }}</h3>
+            <p class="product-description">{{ product.description }}</p>
+            <p class="product-price">R$ {{ product.price }}</p>
+          </div>
         </div>
-        <button type="submit">{{ editMode ? "Salvar" : "Adicionar" }}</button>
-        <button @click="closeProductForm">Cancelar</button>
-      </form>
+        <button @click="editProduct(product)" class="edit-button">Editar</button>
+      </div>
     </div>
 
     <!-- Botão para enviar os dados -->
-    <button @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
+    <button class="edit-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
+
+    <!-- Modal de adição/edição de produtos -->
+    <div v-if="isProductFormVisible" class="product-form">
+      <div class="modal-content">
+        <h2>{{ editMode ? "Editar Produto" : "Adicionar Produto" }}</h2>
+        <form @submit.prevent="saveProduct">
+          <div class="form-group">
+            <label for="title">Título:</label>
+            <input type="text" v-model="product.title" id="title" required />
+          </div>
+          <div class="form-group">
+            <label for="description">Descrição:</label>
+            <textarea v-model="product.description" id="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="price">Preço:</label>
+            <input
+              type="text"
+              v-model="product.price"
+              id="price"
+              required
+              @input="validatePrice"
+            />
+          </div>
+          <div class="form-group">
+            <label for="image">Imagem:</label>
+            <input type="file" @change="onImageChange" id="image" accept="image/*" />
+            <img :src="product.image" alt="Imagem do produto" class="product-image" />
+          </div>
+          <div class="form-actions">
+            <button type="submit">{{ editMode ? "Salvar" : "Adicionar" }}</button>
+            <button @click="closeProductForm">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -141,18 +148,26 @@ export default {
       this.editMode = true;
       this.isProductFormVisible = true;
     },
+    validatePrice() {
+      // Use uma expressão regular para verificar se o valor é um número válido
+      const validPricePattern = /^\d+(\.\d{1,2})?$/;
+      if (!validPricePattern.test(this.product.price)) {
+        // Se não for um número válido, você pode exibir uma mensagem de erro ou tomar a ação apropriada.
+        // Neste exemplo, apenas definimos o valor de preço para 0.
+        this.product.price = "0";
+      }
+    },
     sendSelectedProducts() {
-  // Filtrar apenas os produtos selecionados
-  const selectedProducts = this.products.filter((product) =>
-    this.selectedProducts.includes(product)
-  );
+      // Filtrar apenas os produtos selecionados
+      const selectedProducts = this.products.filter((product) =>
+        this.selectedProducts.includes(product)
+      );
 
-  // Agora você pode enviar a lista de produtos selecionados para onde precisar,
-  // como armazenamento local (LocalStorage) ou para o Vuex, dependendo da sua aplicação.
-  console.log(selectedProducts);
-  this.$store.dispatch("products/updateSelectedProducts", selectedProducts);
-},
-
+      // Agora você pode enviar a lista de produtos selecionados para onde precisar,
+      // como armazenamento local (LocalStorage) ou para o Vuex, dependendo da sua aplicação.
+      console.log(selectedProducts);
+      this.$store.dispatch("products/updateSelectedProducts", selectedProducts);
+    },
   },
 };
 </script>
@@ -171,24 +186,13 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column; /* Centralizar verticalmente */
 }
 
-.product-table td:first-child {
-  text-align: left;
-}
-
-.product-form h2 {
-  text-align: center;
-}
-
-.product-form form {
+.modal-content {
   background: #fff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 20px;
-  max-width: 400px;
-  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
 .form-group {
@@ -212,9 +216,55 @@ export default {
   margin-top: 10px;
 }
 
+.product-grid {
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.product-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.product-checkbox {
+  margin-bottom: 10px;
+}
+
+.product-details {
+  text-align: center;
+}
+
 .product-image {
   max-width: 100px;
   max-height: 100px;
+}
+
+.product-title {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.product-price {
+  font-weight: bold;
+  color: #007bff; /* Cor azul para o preço */
+}
+
+.edit-button {
   margin-top: 10px;
+  background-color: #007bff; /* Cor azul para o botão de editar */
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.edit-button:hover {
+  background-color: #0056b3; /* Cor mais escura ao passar o mouse */
 }
 </style>
