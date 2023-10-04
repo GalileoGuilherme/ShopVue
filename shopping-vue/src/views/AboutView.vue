@@ -40,7 +40,12 @@
         </div>
         <div class="form-group">
           <label for="price">Preço:</label>
-          <input type="number" v-model="product.price" id="price" required />
+          <input type="text" v-model="product.price" id="price" required />
+        </div>
+        <div class="form-group">
+          <label for="image">Imagem:</label>
+          <input type="file" @change="onImageChange" id="image" accept="image/*" />
+          <img :src="product.image" alt="Imagem do produto" class="product-image" />
         </div>
         <button type="submit">{{ editMode ? "Salvar" : "Adicionar" }}</button>
         <button @click="closeProductForm">Cancelar</button>
@@ -63,10 +68,11 @@ export default {
       loading: false,
       isProductFormVisible: false,
       product: {
-        id: null, // Certifique-se de que o objeto product tenha uma propriedade id
+        id: null,
         title: "",
         description: "",
         price: 0,
+        image: "", // Adicionando a propriedade image
       },
       editMode: false,
     };
@@ -101,24 +107,31 @@ export default {
         title: "",
         description: "",
         price: 0,
+        image: "",
       };
+    },
+    onImageChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.product.image = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
     },
     saveProduct() {
       if (this.editMode) {
-        // Lógica para editar o produto
         const editedProductIndex = this.products.findIndex(
           (p) => p.id === this.product.id
         );
         if (editedProductIndex !== -1) {
           this.products[editedProductIndex] = { ...this.product };
-          // Atualize o LocalStorage com os produtos editados
           localStorage.setItem("products", JSON.stringify(this.products));
         }
       } else {
-        // Lógica para adicionar o produto
         const newProduct = { ...this.product, id: Date.now() };
         this.products.push(newProduct);
-        // Atualize o LocalStorage com os produtos adicionados
         localStorage.setItem("products", JSON.stringify(this.products));
       }
       this.closeProductForm();
@@ -129,11 +142,17 @@ export default {
       this.isProductFormVisible = true;
     },
     sendSelectedProducts() {
-      // Lógica para enviar os produtos selecionados
-      console.log(this.selectedProducts);
-      // Certifique-se de que os produtos selecionados foram atualizados corretamente com as edições
-      this.$store.dispatch("products/updateSelectedProducts", this.selectedProducts);
-    },
+  // Filtrar apenas os produtos selecionados
+  const selectedProducts = this.products.filter((product) =>
+    this.selectedProducts.includes(product)
+  );
+
+  // Agora você pode enviar a lista de produtos selecionados para onde precisar,
+  // como armazenamento local (LocalStorage) ou para o Vuex, dependendo da sua aplicação.
+  console.log(selectedProducts);
+  this.$store.dispatch("products/updateSelectedProducts", selectedProducts);
+},
+
   },
 };
 </script>
@@ -190,6 +209,12 @@ export default {
 }
 
 .form-group button {
+  margin-top: 10px;
+}
+
+.product-image {
+  max-width: 100px;
+  max-height: 100px;
   margin-top: 10px;
 }
 </style>
