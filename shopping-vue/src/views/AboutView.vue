@@ -28,7 +28,23 @@
 
     <!-- Modal de adição/edição de produtos -->
     <div v-if="isProductFormVisible" class="product-form">
-      <!-- Resto do código do modal -->
+      <h2>{{ editMode ? "Editar Produto" : "Adicionar Produto" }}</h2>
+      <form @submit.prevent="saveProduct">
+        <div class="form-group">
+          <label for="title">Título:</label>
+          <input type="text" v-model="product.title" id="title" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Descrição:</label>
+          <textarea v-model="product.description" id="description"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="price">Preço:</label>
+          <input type="number" v-model="product.price" id="price" required />
+        </div>
+        <button type="submit">{{ editMode ? "Salvar" : "Adicionar" }}</button>
+        <button @click="closeProductForm">Cancelar</button>
+      </form>
     </div>
 
     <!-- Botão para enviar os dados -->
@@ -36,23 +52,18 @@
   </div>
 </template>
 
-
-
-
 <script>
 import axios from "axios";
-// import { mapActions } from "vuex";
 
 export default {
-
   data() {
     return {
       products: [],
-      showModal: false,
       selectedProducts: [],
       loading: false,
       isProductFormVisible: false,
       product: {
+        id: null, // Certifique-se de que o objeto product tenha uma propriedade id
         title: "",
         description: "",
         price: 0,
@@ -86,6 +97,7 @@ export default {
     },
     resetForm() {
       this.product = {
+        id: null,
         title: "",
         description: "",
         price: 0,
@@ -94,21 +106,24 @@ export default {
     saveProduct() {
       if (this.editMode) {
         // Lógica para editar o produto
-        // Implemente sua lógica de edição aqui
+        const editedProductIndex = this.products.findIndex(
+          (p) => p.id === this.product.id
+        );
+        if (editedProductIndex !== -1) {
+          this.products[editedProductIndex] = { ...this.product };
+          // Atualize o LocalStorage com os produtos editados
+          localStorage.setItem("products", JSON.stringify(this.products));
+        }
       } else {
         // Lógica para adicionar o produto
-        // Implemente sua lógica de adição aqui
-
-        // Após adicionar o produto, você pode atualizar a lista de produtos
-        // Para este exemplo, vamos apenas adicionar o produto à lista
-        this.products.push({ ...this.product });
+        const newProduct = { ...this.product, id: Date.now() };
+        this.products.push(newProduct);
+        // Atualize o LocalStorage com os produtos adicionados
+        localStorage.setItem("products", JSON.stringify(this.products));
       }
-
-      // Feche o formulário após adicionar/editar o produto
       this.closeProductForm();
     },
     editProduct(product) {
-      // Abra o formulário no modo de edição com os dados do produto selecionado
       this.product = { ...product };
       this.editMode = true;
       this.isProductFormVisible = true;
@@ -116,10 +131,8 @@ export default {
     sendSelectedProducts() {
       // Lógica para enviar os produtos selecionados
       console.log(this.selectedProducts);
-      this.$store.dispatch(
-        "products/updateSelectedProducts",
-        this.selectedProducts
-      );
+      // Certifique-se de que os produtos selecionados foram atualizados corretamente com as edições
+      this.$store.dispatch("products/updateSelectedProducts", this.selectedProducts);
     },
   },
 };
@@ -139,12 +152,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column; /* Centralizar verticalmente */
 }
 
 .product-table td:first-child {
   text-align: left;
 }
-
 
 .product-form h2 {
   text-align: center;
