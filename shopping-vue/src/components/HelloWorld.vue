@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="product-grid">
@@ -9,8 +8,20 @@
       >
         <img :src="product.image" :alt="product.title" class="product-image" />
         <h3 class="product-title">{{ product.title }}</h3>
-        <p class="product-description">{{ product.description }}</p>
-        <p class="product-price">R$ {{ product.price }}</p>
+        <button @click="showProductDetails(product)" class="show-details-button">
+          Mostrar Detalhes
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal de detalhes do produto -->
+    <div class="modal" v-if="selectedProduct">
+      <div class="modal-content">
+        <span class="close" @click="closeProductDetails">&times;</span>
+        <img :src="selectedProduct.image" :alt="selectedProduct.title" class="modal-image" />
+        <h3>{{ selectedProduct.title }}</h3>
+        <p>{{ selectedProduct.description }}</p>
+        <p>Preço: R$ {{ selectedProduct.price }}</p>
       </div>
     </div>
   </div>
@@ -20,8 +31,22 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  data() {
+    return {
+      selectedProduct: null,
+    };
+  },
   methods: {
     ...mapActions("products", ["updateSelectedProducts"]),
+    showProductDetails(product) {
+      this.selectedProduct = product;
+      console.log('showProductDetails', this.selectedProduct);
+      document.body.style.overflow = "hidden"; // Impede a rolagem da página por trás do modal
+    },
+    closeProductDetails() {
+      this.selectedProduct = null;
+      document.body.style.overflow = "auto"; // Restaura a rolagem da página
+    },
   },
   computed: {
     ...mapGetters("products", ["getSelectedProducts"]),
@@ -52,12 +77,53 @@ export default {
   margin-top: 10px;
 }
 
-.product-description {
+.show-details-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
   margin-top: 5px;
 }
 
-.product-price {
-  font-weight: bold;
-  margin-top: 5px;
+.show-details-button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos para o modal */
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  max-width: 600px;
+  position: relative;
+  border-radius: 5px;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.modal-image {
+  max-width: 100%;
+  height: auto;
 }
 </style>
