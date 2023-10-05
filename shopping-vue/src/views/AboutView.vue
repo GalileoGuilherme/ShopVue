@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="view">
     <div v-if="loading" class="loader">Carregando...</div>
 
     <!-- Grid de produtos -->
@@ -25,7 +25,7 @@
 
     <!-- Botão para enviar os dados -->
     <button class="edit-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
-    <LeftMenu :selectedProducts="selectedProducts" />
+    <LeftMenu :selectedProducts="selectedProducts" @send-products="handleSendProducts"/>
     <!-- Modal de adição/edição de produtos -->
     <div v-if="isProductFormVisible" class="product-form">
       <div class="modal-content">
@@ -172,6 +172,17 @@ export default {
       console.log(selectedProducts);
       this.$store.dispatch("products/updateSelectedProducts", selectedProducts);
     },
+    handleSendProducts() {
+    // Implemente a lógica para enviar os produtos selecionados aqui
+    const selectedProducts = this.products.filter((product) =>
+        this.selectedProducts.includes(product)
+      );
+
+      // Agora você pode enviar a lista de produtos selecionados para onde precisar,
+      // como armazenamento local (LocalStorage) ou para o Vuex, dependendo da sua aplicação.
+      console.log(selectedProducts);
+      this.$store.dispatch("products/updateSelectedProducts", selectedProducts);
+  },
   },
 };
 </script>
@@ -223,8 +234,8 @@ export default {
 .product-grid {
   max-width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 .product-card {
@@ -270,5 +281,8 @@ export default {
 
 .edit-button:hover {
   background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+}
+.view {
+  margin-left: 170px;
 }
 </style>
