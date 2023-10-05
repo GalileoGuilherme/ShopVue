@@ -25,7 +25,7 @@
 
     <!-- Botão para enviar os dados -->
     <button class="edit-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
-
+    <LeftMenu :selectedProducts="selectedProducts" />
     <!-- Modal de adição/edição de produtos -->
     <div v-if="isProductFormVisible" class="product-form">
       <div class="modal-content">
@@ -66,8 +66,12 @@
 
 <script>
 import axios from "axios";
+import LeftMenu from "@/components/LeftMenu.vue";
 
 export default {
+  components: {
+    LeftMenu,
+  },
   data() {
     return {
       products: [],
