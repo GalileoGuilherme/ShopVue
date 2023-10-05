@@ -109,7 +109,7 @@ export default {
   padding: 20px;
   border: 1px solid #888;
   width: 50%;
-  max-width: 600px;
+  max-width: 400px;
   position: relative;
   border-radius: 5px;
 }
@@ -123,7 +123,7 @@ export default {
 }
 
 .modal-image {
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
 }
 </style>

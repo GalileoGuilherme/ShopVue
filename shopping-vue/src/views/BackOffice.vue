@@ -25,7 +25,7 @@
 
     <!-- Botão para enviar os dados -->
     <button class="edit-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
-    <LeftMenu :selectedProducts="selectedProducts" @send-products="handleSendProducts"/>
+    <LeftMenu :selectedProducts="selectedProducts" @send-products="handleSendProducts" @update-data-with-api="fetchProductsFromApi"/>
     <!-- Modal de adição/edição de produtos -->
     <div v-if="isProductFormVisible" class="product-form">
       <div class="modal-content">
@@ -171,6 +171,20 @@ export default {
       // como armazenamento local (LocalStorage) ou para o Vuex, dependendo da sua aplicação.
       console.log(selectedProducts);
       this.$store.dispatch("products/updateSelectedProducts", selectedProducts);
+    },
+    async fetchProductsFromApi() {
+      this.loading = true;
+      try {
+        const response = await axios.get("https://fakestoreapi.com/products");
+        this.products = response.data;
+
+        // Atualize os dados armazenados localmente
+        localStorage.setItem("products", JSON.stringify(this.products));
+      } catch (error) {
+        console.error("Erro ao buscar a lista de produtos da API:", error);
+      } finally {
+        this.loading = false;
+      }
     },
     handleSendProducts() {
     // Implemente a lógica para enviar os produtos selecionados aqui

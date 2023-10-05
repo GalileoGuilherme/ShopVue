@@ -9,6 +9,7 @@
   
       <!-- Botão para enviar produtos selecionados -->
       <button class="send-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
+      <button class="send-button" @click="updateDataWithApi">Atualizar dados com a API</button>
     </div>
   </template>
   
@@ -22,6 +23,10 @@
         // Emita um evento para notificar o componente pai (onde o método `sendSelectedProducts` será chamado)
         this.$emit("send-products");
       },
+      updateDataWithApi() {
+      // Implemente a lógica para atualizar os dados com a API aqui
+      this.$emit('update-data-with-api'); // Emita um evento para notificar o componente pai
+    },
     },
   };
   </script>

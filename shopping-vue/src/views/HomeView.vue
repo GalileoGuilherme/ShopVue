@@ -1,17 +1,17 @@
 <template>
   <div class="home">
 
-    <HelloWorld msg="Lista de Produtos"/>
+    <ViewCLient msg="Lista de Produtos"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from '@/components/HelloWorld.vue'
+import ViewCLient from '@/components/ViewClient.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld
+    ViewCLient
   }
 }
 </script>
