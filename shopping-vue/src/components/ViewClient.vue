@@ -2,7 +2,7 @@
   <div>
     <div class="product-grid">
       <div
-        v-for="product in getSelectedProducts"
+        v-for="product in selectedProducts"
         :key="product.id"
         class="product-item"
       >
@@ -33,8 +33,16 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
+      selectedProducts: [],
       selectedProduct: null,
     };
+  },
+  created() {
+    // Recupere os produtos selecionados do localStorage, se existirem
+    const storedSelectedProducts = localStorage.getItem("selectedProducts");
+    if (storedSelectedProducts) {
+      this.selectedProducts = JSON.parse(storedSelectedProducts);
+    }
   },
   methods: {
     ...mapActions("products", ["updateSelectedProducts"]),

@@ -25,7 +25,7 @@
 
     <!-- Botão para enviar os dados -->
     <button class="edit-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
-    <LeftMenu :selectedProducts="selectedProducts" @send-products="handleSendProducts" @update-data-with-api="fetchProductsFromApi"/>
+    <LeftMenu :selectedProducts="selectedProducts" @send-products="sendSelectedProducts" @update-data-with-api="fetchProductsFromApi"/>
     <!-- Modal de adição/edição de produtos -->
     <div v-if="isProductFormVisible" class="product-form">
       <div class="modal-content">
@@ -162,16 +162,16 @@ export default {
       }
     },
     sendSelectedProducts() {
-      // Filtrar apenas os produtos selecionados
-      const selectedProducts = this.products.filter((product) =>
-        this.selectedProducts.includes(product)
-      );
+  // Filtrar apenas os produtos selecionados
+  const selectedProducts = this.products.filter((product) =>
+    this.selectedProducts.includes(product)
+  );
 
-      // Agora você pode enviar a lista de produtos selecionados para onde precisar,
-      // como armazenamento local (LocalStorage) ou para o Vuex, dependendo da sua aplicação.
-      console.log(selectedProducts);
-      this.$store.dispatch("products/updateSelectedProducts", selectedProducts);
-    },
+  // Armazenar os produtos selecionados no localStorage
+  localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
+  console.log('sendSelectedProducts', selectedProducts);
+},
+
     async fetchProductsFromApi() {
       this.loading = true;
       try {

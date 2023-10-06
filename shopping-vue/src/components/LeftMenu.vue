@@ -1,35 +1,35 @@
 <template>
-    <div class="left-menu">
-      <h3>Produtos Selecionados</h3>
-      <ul>
-        <li v-for="product in selectedProducts" :key="product.id">
-          {{ product.title }}
-        </li>
-      </ul>
-  
-      <!-- Botão para enviar produtos selecionados -->
-      <button class="send-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
-      <button class="send-button" @click="updateDataWithApi">Atualizar dados com a API</button>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      selectedProducts: Array,
+  <div class="left-menu">
+    <h3>Produtos Selecionados</h3>
+    <ul>
+      <li v-for="product in selectedProducts" :key="product.id">
+        {{ product.title }}
+      </li>
+    </ul>
+
+    <!-- Botão para enviar produtos selecionados -->
+    <button class="send-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
+    <button class="send-button" @click="updateDataWithApi">Atualizar dados com a API</button>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    selectedProducts: Array,
+  },
+  methods: {
+    sendSelectedProducts() {
+      // Emita um evento para notificar o componente pai (onde o método `sendSelectedProducts` será chamado)
+      this.$emit("send-products");
     },
-    methods: {
-      sendSelectedProducts() {
-        // Emita um evento para notificar o componente pai (onde o método `sendSelectedProducts` será chamado)
-        this.$emit("send-products");
-      },
-      updateDataWithApi() {
+    updateDataWithApi() {
       // Implemente a lógica para atualizar os dados com a API aqui
       this.$emit('update-data-with-api'); // Emita um evento para notificar o componente pai
     },
-    },
-  };
-  </script>
+  },
+};
+</script>
   
   <style scoped>
   /* Estilos para o componente LeftMenu */
