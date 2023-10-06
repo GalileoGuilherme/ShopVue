@@ -2,8 +2,8 @@
   <div class="left-menu">
     <h3>Produtos Selecionados</h3>
     <ul>
-      <li v-for="product in selectedProducts" :key="product.id">
-        {{ product.title }}
+      <li v-for="(product, index) in selectedProducts" :key="product.id">
+        <div class="marker">{{ index + 1 }}</div> {{ product.title }}
       </li>
     </ul>
 
@@ -11,13 +11,14 @@
     <button class="send-button" @click="sendSelectedProducts">
       Enviar Produtos Selecionados
     </button>
-    <button class="send-button" @click="updateDataWithApi">
-      Atualizar dados com a API
-    </button>
 
     <!-- Botão para adicionar um novo produto -->
     <button class="send-button" @click="addNewProduct">
       Adicionar Produto
+    </button>
+
+    <button class="send-button" @click="updateDataWithApi">
+      Atualizar lista de produtos com a API
     </button>
   </div>
 </template>
@@ -37,20 +38,34 @@ export default {
         image: "",
       };
 
+      // Adicione o novo produto à lista de produtos selecionados
+      this.selectedProducts.push(newProduct);
+
+      // Salve a lista atualizada no localStorage
+      localStorage.setItem("selectedProducts", JSON.stringify(this.selectedProducts));
+
       this.$emit("add-product", newProduct);
     },
 
     sendSelectedProducts() {
       this.$emit("send-products");
     },
+
     updateDataWithApi() {
       this.$emit("update-data-with-api");
     },
   },
+  mounted() {
+    // Recupere a lista de produtos selecionados do localStorage quando o componente é montado
+    const storedSelectedProducts = localStorage.getItem("selectedProducts");
+    if (storedSelectedProducts) {
+      this.selectedProducts = JSON.parse(storedSelectedProducts);
+    }
+  },
 };
 </script>
   
-  <style scoped>
+<style scoped>
 .left-menu {
   background-color: #f0f0f0;
   padding: 10px;
@@ -74,10 +89,12 @@ export default {
 
 .left-menu li {
   margin-bottom: 5px;
+  /* display: flex; */
+  align-items: center;
 }
 
 .send-button {
-  background-color: #007bff;
+  background-color: #42b983;
   color: #fff;
   border: none;
   cursor: pointer;
@@ -87,7 +104,19 @@ export default {
 }
 
 .send-button:hover {
-  background-color: #0056b3;
+  background-color: #2e865f;
+}
+
+.marker {
+  width: 20px;
+  height: 20px;
+  background-color: #42b983;
+  color: #fff; 
+  border-radius: 50%;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
 </style>
-  

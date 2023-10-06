@@ -85,6 +85,9 @@
         </form>
       </div>
     </div>
+    <div class="snackbar" :class="{ show: snackbarVisible }">
+      {{ snackbarText }}
+    </div>
   </div>
 </template>
 
@@ -109,6 +112,8 @@ export default {
         price: 0,
         image: "",
       },
+      snackbarText: "",
+      snackbarVisible: false,
       editMode: false,
       shouldUpdateData: false,
     };
@@ -204,6 +209,15 @@ export default {
         this.product.price = "0";
       }
     },
+    showSnackbar(message) {
+      this.snackbarText = message;
+      this.snackbarVisible = true;
+
+      // Esconda a Snackbar após alguns segundos (por exemplo, 4 segundos)
+      setTimeout(() => {
+        this.snackbarVisible = false;
+      }, 4000);
+    },
     sendSelectedProducts() {
       // Filtrar apenas os produtos selecionados
       const selectedProducts = this.products.filter((product) =>
@@ -215,6 +229,8 @@ export default {
         "selectedProducts",
         JSON.stringify(selectedProducts)
       );
+      // Exibir a Snackbar com a mensagem de sucesso
+      this.showSnackbar("Produtos selecionados enviados com sucesso!");
     },
 
     async fetchProductsFromApi() {
@@ -320,12 +336,12 @@ export default {
 
 .product-price {
   font-weight: bold;
-  color: #007bff;
+  color: #42b983;
 }
 
 .edit-button {
   margin-top: 10px;
-  background-color: #007bff;
+  background-color: #42b983;
   color: #fff;
   border: none;
   cursor: pointer;
@@ -334,9 +350,27 @@ export default {
 }
 
 .edit-button:hover {
-  background-color: #0056b3;
+  background-color: #2e865f;
 }
 .view {
   margin-left: 170px;
+}
+
+.snackbar {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #42b983;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.snackbar.show {
+  display: block;
 }
 </style>
