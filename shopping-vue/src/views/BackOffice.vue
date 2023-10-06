@@ -12,20 +12,33 @@
           class="product-checkbox"
         />
         <div class="product-details">
-          <img :src="product.image" alt="Imagem do produto" class="product-image" />
+          <img
+            :src="product.image"
+            alt="Imagem do produto"
+            class="product-image"
+          />
           <div class="product-info">
             <h3 class="product-title">{{ product.title }}</h3>
             <p class="product-description">{{ product.description }}</p>
             <p class="product-price">R$ {{ product.price }}</p>
           </div>
         </div>
-        <button @click="editProduct(product)" class="edit-button">Editar</button>
+        <button @click="editProduct(product)" class="edit-button">
+          Editar
+        </button>
       </div>
     </div>
 
     <!-- Botão para enviar os dados -->
-    <button class="edit-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
-    <LeftMenu :selectedProducts="selectedProducts" @send-products="sendSelectedProducts" @update-data-with-api="fetchProductsFromApi"/>
+    <button class="edit-button" @click="sendSelectedProducts">
+      Enviar Produtos Selecionados
+    </button>
+    <LeftMenu
+      :selectedProducts="selectedProducts"
+      @send-products="sendSelectedProducts"
+      @update-data-with-api="fetchProductsFromApi"
+      @add-product="addProduct"
+    />
     <!-- Modal de adição/edição de produtos -->
     <div v-if="isProductFormVisible" class="product-form">
       <div class="modal-content">
@@ -51,11 +64,22 @@
           </div>
           <div class="form-group">
             <label for="image">Imagem:</label>
-            <input type="file" @change="onImageChange" id="image" accept="image/*" />
-            <img :src="product.image" alt="Imagem do produto" class="product-image" />
+            <input
+              type="file"
+              @change="onImageChange"
+              id="image"
+              accept="image/*"
+            />
+            <img
+              :src="product.image"
+              alt="Imagem do produto"
+              class="product-image"
+            />
           </div>
           <div class="form-actions">
-            <button type="submit">{{ editMode ? "Salvar" : "Adicionar" }}</button>
+            <button type="submit">
+              {{ editMode ? "Salvar" : "Adicionar" }}
+            </button>
             <button @click="closeProductForm">Cancelar</button>
           </div>
         </form>
@@ -83,9 +107,10 @@ export default {
         title: "",
         description: "",
         price: 0,
-        image: "", // Adicionando a propriedade image
+        image: "",
       },
       editMode: false,
+      shouldUpdateData: false,
     };
   },
   mounted() {
@@ -95,14 +120,32 @@ export default {
     async fetchProducts() {
       this.loading = true;
       try {
-        const response = await axios.get("https://fakestoreapi.com/products");
-        this.products = response.data;
+        if (this.shouldUpdateData) {
+          const response = await axios.get("https://fakestoreapi.com/products");
+          this.products = response.data;
+          localStorage.setItem("products", JSON.stringify(this.products));
+        } else {
+          // Se shouldUpdateData for falso, busque os dados do localStorage
+          const storedProducts = localStorage.getItem("products");
+          if (storedProducts) {
+            this.products = JSON.parse(storedProducts);
+          }
+        }
       } catch (error) {
         console.error("Erro ao buscar a lista de produtos:", error);
       } finally {
         this.loading = false;
       }
     },
+
+    addProduct(newProduct) {
+      // Adicione o novo produto ao início da lista de produtos
+      this.products.unshift(newProduct);
+
+      // Salve a lista atualizada no localStorage
+      localStorage.setItem("products", JSON.stringify(this.products));
+    },
+
     openProductForm() {
       this.isProductFormVisible = true;
       this.editMode = false;
@@ -153,7 +196,7 @@ export default {
       this.isProductFormVisible = true;
     },
     validatePrice() {
-      // Use uma expressão regular para verificar se o valor é um número válido
+      //verificar se o valor é um número válido
       const validPricePattern = /^\d+(\.\d{1,2})?$/;
       if (!validPricePattern.test(this.product.price)) {
         // Se não for um número válido, você pode exibir uma mensagem de erro ou tomar a ação apropriada.
@@ -162,15 +205,17 @@ export default {
       }
     },
     sendSelectedProducts() {
-  // Filtrar apenas os produtos selecionados
-  const selectedProducts = this.products.filter((product) =>
-    this.selectedProducts.includes(product)
-  );
+      // Filtrar apenas os produtos selecionados
+      const selectedProducts = this.products.filter((product) =>
+        this.selectedProducts.includes(product)
+      );
 
-  // Armazenar os produtos selecionados no localStorage
-  localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
-  console.log('sendSelectedProducts', selectedProducts);
-},
+      // Armazenar os produtos selecionados no localStorage
+      localStorage.setItem(
+        "selectedProducts",
+        JSON.stringify(selectedProducts)
+      );
+    },
 
     async fetchProductsFromApi() {
       this.loading = true;
@@ -178,7 +223,7 @@ export default {
         const response = await axios.get("https://fakestoreapi.com/products");
         this.products = response.data;
 
-        // Atualize os dados armazenados localmente
+        // Atualiza os dados armazenados localmente
         localStorage.setItem("products", JSON.stringify(this.products));
       } catch (error) {
         console.error("Erro ao buscar a lista de produtos da API:", error);
@@ -187,22 +232,17 @@ export default {
       }
     },
     handleSendProducts() {
-    // Implemente a lógica para enviar os produtos selecionados aqui
-    const selectedProducts = this.products.filter((product) =>
+      // lógica para enviar os produtos selecionados
+      const selectedProducts = this.products.filter((product) =>
         this.selectedProducts.includes(product)
       );
-
-      // Agora você pode enviar a lista de produtos selecionados para onde precisar,
-      // como armazenamento local (LocalStorage) ou para o Vuex, dependendo da sua aplicação.
-      console.log(selectedProducts);
       this.$store.dispatch("products/updateSelectedProducts", selectedProducts);
-  },
+    },
   },
 };
 </script>
 
 <style scoped>
-/* Estilos CSS para o modal */
 .product-form {
   display: none;
   position: fixed;
@@ -280,12 +320,12 @@ export default {
 
 .product-price {
   font-weight: bold;
-  color: #007bff; /* Cor azul para o preço */
+  color: #007bff;
 }
 
 .edit-button {
   margin-top: 10px;
-  background-color: #007bff; /* Cor azul para o botão de editar */
+  background-color: #007bff;
   color: #fff;
   border: none;
   cursor: pointer;
@@ -294,7 +334,7 @@ export default {
 }
 
 .edit-button:hover {
-  background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+  background-color: #0056b3;
 }
 .view {
   margin-left: 170px;

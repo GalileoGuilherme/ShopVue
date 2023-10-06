@@ -38,7 +38,7 @@ export default {
     };
   },
   created() {
-    // Recupere os produtos selecionados do localStorage, se existirem
+    // Recupera os produtos selecionados do localStorage
     const storedSelectedProducts = localStorage.getItem("selectedProducts");
     if (storedSelectedProducts) {
       this.selectedProducts = JSON.parse(storedSelectedProducts);
@@ -56,9 +56,9 @@ export default {
       document.body.style.overflow = "auto"; // Restaura a rolagem da página
     },
   },
-  computed: {
-    ...mapGetters("products", ["getSelectedProducts"]),
-  },
+  // computed: {
+  //   ...mapGetters("products", ["getSelectedProducts"]),
+  // },
 };
 </script>
 

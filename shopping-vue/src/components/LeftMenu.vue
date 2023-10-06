@@ -8,8 +8,17 @@
     </ul>
 
     <!-- Botão para enviar produtos selecionados -->
-    <button class="send-button" @click="sendSelectedProducts">Enviar Produtos Selecionados</button>
-    <button class="send-button" @click="updateDataWithApi">Atualizar dados com a API</button>
+    <button class="send-button" @click="sendSelectedProducts">
+      Enviar Produtos Selecionados
+    </button>
+    <button class="send-button" @click="updateDataWithApi">
+      Atualizar dados com a API
+    </button>
+
+    <!-- Botão para adicionar um novo produto -->
+    <button class="send-button" @click="addNewProduct">
+      Adicionar Produto
+    </button>
   </div>
 </template>
 
@@ -19,57 +28,66 @@ export default {
     selectedProducts: Array,
   },
   methods: {
+    addNewProduct() {
+      const newProduct = {
+        id: Date.now(),
+        title: "Novo Produto",
+        description: "Descrição do Novo Produto",
+        price: 0,
+        image: "",
+      };
+
+      this.$emit("add-product", newProduct);
+    },
+
     sendSelectedProducts() {
-      // Emita um evento para notificar o componente pai (onde o método `sendSelectedProducts` será chamado)
       this.$emit("send-products");
     },
     updateDataWithApi() {
-      // Implemente a lógica para atualizar os dados com a API aqui
-      this.$emit('update-data-with-api'); // Emita um evento para notificar o componente pai
+      this.$emit("update-data-with-api");
     },
   },
 };
 </script>
   
   <style scoped>
-  /* Estilos para o componente LeftMenu */
-  .left-menu {
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-right: 1px solid #ccc;
-    height: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 150px;
-    overflow-y: auto;
-  }
-  
-  .left-menu h3 {
-    margin-top: 0;
-  }
-  
-  .left-menu ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .left-menu li {
-    margin-bottom: 5px;
-  }
-  
-  .send-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-  }
-  
-  .send-button:hover {
-    background-color: #0056b3;
-  }
-  </style>
+.left-menu {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-right: 1px solid #ccc;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 150px;
+  overflow-y: auto;
+}
+
+.left-menu h3 {
+  margin-top: 0;
+}
+
+.left-menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.left-menu li {
+  margin-bottom: 5px;
+}
+
+.send-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+}
+</style>
   
