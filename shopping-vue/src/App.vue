@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav :style="{ 'margin-left': $route.path === '/backOffice' ? '170px' : '0' }" class="header">
+    <nav class="header">
       <router-link to="/" class="header-link">ViewClient</router-link> |
       <router-link to="/backOffice" class="header-link">BackOffice</router-link>
     </nav>
@@ -24,6 +24,7 @@
   justify-content: center; 
   align-items: center; 
   margin-bottom: 20px;
+  margin-left: 170px;
 }
 
 .header-link {

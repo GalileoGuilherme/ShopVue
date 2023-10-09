@@ -77,10 +77,10 @@
             />
           </div>
           <div class="form-actions">
-            <button type="submit">
+            <button type="submit" class="edit-button">
               {{ editMode ? "Salvar" : "Adicionar" }}
             </button>
-            <button @click="closeProductForm">Cancelar</button>
+            <button class="edit-button-cancel" @click="closeProductForm">Cancelar</button>
           </div>
         </form>
       </div>
@@ -362,6 +362,16 @@ export default {
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 5px;
+}
+.edit-button-cancel {
+  margin-top: 10px;
+  background-color: #42b983;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-left: 5px;
 }
 
 .edit-button:hover {

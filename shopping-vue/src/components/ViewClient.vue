@@ -13,6 +13,7 @@
         </button>
       </div>
     </div>
+    <left-menu-cart/>
 
     <!-- Modal de detalhes do produto -->
     <div class="modal" v-if="selectedProduct">
@@ -29,8 +30,10 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import LeftMenuCart from './LeftMenuCart.vue';
 
 export default {
+  components: { LeftMenuCart },
   data() {
     return {
       selectedProducts: [],
@@ -55,6 +58,11 @@ export default {
       this.selectedProduct = null;
       document.body.style.overflow = "auto"; // Restaura a rolagem da página
     },
+    addToCart(product) {
+      this.updateSelectedProducts(product);
+      // armazenar os produtos no localStorage
+      localStorage.setItem("selectedProducts", JSON.stringify(this.selectedProducts));
+    },
   },
   // computed: {
   //   ...mapGetters("products", ["getSelectedProducts"]),
@@ -64,6 +72,7 @@ export default {
 
 <style scoped>
 .product-grid {
+  margin-left: 170px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
