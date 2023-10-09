@@ -28,6 +28,12 @@ export default {
   props: {
     selectedProducts: Array,
   },
+  data() {
+    return {
+      // Create a copy of selectedProducts to work with
+      selectedProductsCopy: [...this.selectedProducts],
+    };
+  },
   methods: {
     addNewProduct() {
       const newProduct = {
@@ -38,33 +44,34 @@ export default {
         image: "",
       };
 
-      // Adicione o novo produto à lista de produtos selecionados
-      this.selectedProducts.push(newProduct);
+      // Modify the copy, not the prop
+      this.selectedProductsCopy.push(newProduct);
 
-      // Salve a lista atualizada no localStorage
-      localStorage.setItem("selectedProducts", JSON.stringify(this.selectedProducts));
-
+      // Emit an event to update the parent component
       this.$emit("add-product", newProduct);
     },
 
     sendSelectedProducts() {
+      // Emit an event to notify the parent component
       this.$emit("send-products");
     },
 
     updateDataWithApi() {
+      // Emit an event to notify the parent component
       this.$emit("update-data-with-api");
     },
   },
   mounted() {
+    // You can initialize the selectedProductsCopy here if needed.
     // Recupere a lista de produtos selecionados do localStorage quando o componente é montado
     const storedSelectedProducts = localStorage.getItem("selectedProducts");
     if (storedSelectedProducts) {
-      this.selectedProducts = JSON.parse(storedSelectedProducts);
+      this.selectedProductsCopy = JSON.parse(storedSelectedProducts);
     }
   },
 };
 </script>
-  
+
 <style scoped>
 .left-menu {
   background-color: #f0f0f0;
@@ -89,8 +96,6 @@ export default {
 
 .left-menu li {
   margin-bottom: 5px;
-  /* display: flex; */
-  align-items: center;
 }
 
 .send-button {
@@ -111,7 +116,7 @@ export default {
   width: 20px;
   height: 20px;
   background-color: #42b983;
-  color: #fff; 
+  color: #fff;
   border-radius: 50%;
   margin-right: 10px;
   display: flex;
