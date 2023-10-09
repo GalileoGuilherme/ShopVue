@@ -119,7 +119,14 @@ export default {
     };
   },
   mounted() {
-    this.fetchProducts();
+    // Carregue os produtos da API
+    this.fetchProductsFromApi();
+
+    // Carregue produtos selecionados do localStorage
+    const storedSelectedProducts = localStorage.getItem("selectedProducts");
+    if (storedSelectedProducts) {
+      this.selectedProducts = JSON.parse(storedSelectedProducts);
+    }
   },
   methods: {
     async fetchProducts() {
@@ -141,6 +148,13 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    updateSelectedProducts() {
+      localStorage.setItem(
+        "selectedProducts",
+        JSON.stringify(this.selectedProducts)
+      );
     },
 
     addProduct(newProduct) {
@@ -223,6 +237,7 @@ export default {
       const selectedProducts = this.products.filter((product) =>
         this.selectedProducts.includes(product)
       );
+      console.log(selectedProducts);
 
       // Armazenar os produtos selecionados no localStorage
       localStorage.setItem(
