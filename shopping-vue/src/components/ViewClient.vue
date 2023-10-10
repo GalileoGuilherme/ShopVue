@@ -2,7 +2,7 @@
   <div>
     <div class="product-grid">
       <div
-        v-for="product in selectedProducts"
+        v-for="product in products"
         :key="product.id"
         class="product-item"
       >
@@ -11,9 +11,14 @@
         <button @click="showProductDetails(product)" class="show-details-button">
           Mostrar Detalhes
         </button>
+        
+        <!-- Adicione o botão "Adicionar ao Carrinho" -->
+        <button @click="addToCart(product)" class="add-to-cart-button">
+          Adicionar ao Carrinho
+        </button>
       </div>
     </div>
-    <left-menu-cart/>
+    <LeftMenuCart :cartProducts="cartProducts" />
 
     <!-- Modal de detalhes do produto -->
     <div class="modal" v-if="selectedProduct">
@@ -36,37 +41,37 @@ export default {
   components: { LeftMenuCart },
   data() {
     return {
-      selectedProducts: [],
       selectedProduct: null,
     };
   },
-  created() {
-    // Recupera os produtos selecionados do localStorage
-    const storedSelectedProducts = localStorage.getItem("selectedProducts");
-    if (storedSelectedProducts) {
-      this.selectedProducts = JSON.parse(storedSelectedProducts);
-    }
+  computed: {
+    products() {
+      // Recupera os produtos selecionados do localStorage
+      const storedSelectedProducts = localStorage.getItem("selectedProducts");
+      return storedSelectedProducts ? JSON.parse(storedSelectedProducts) : [];
+    },
   },
   methods: {
     ...mapActions("products", ["updateSelectedProducts"]),
     showProductDetails(product) {
       this.selectedProduct = product;
-      console.log('showProductDetails', this.selectedProduct);
-      document.body.style.overflow = "hidden"; // Impede a rolagem da página por trás do modal
+      document.body.style.overflow = "hidden";
     },
     closeProductDetails() {
       this.selectedProduct = null;
-      document.body.style.overflow = "auto"; // Restaura a rolagem da página
+      document.body.style.overflow = "auto";
     },
     addToCart(product) {
+      // Adicione o produto ao carrinho
       this.updateSelectedProducts(product);
-      // armazenar os produtos no localStorage
-      localStorage.setItem("selectedProducts", JSON.stringify(this.selectedProducts));
+      
+      // Emita um evento para enviar o produto para o componente LeftMenuCart
+      this.$root.$emit("addToCart", product);
+
+      // Exiba no console o produto que está sendo adicionado ao carrinho
+      console.log("Produto adicionado ao carrinho:", product);
     },
   },
-  // computed: {
-  //   ...mapGetters("products", ["getSelectedProducts"]),
-  // },
 };
 </script>
 
