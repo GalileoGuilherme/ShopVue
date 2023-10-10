@@ -6,25 +6,22 @@
           {{ product.title }} - R$ {{ product.price }}
         </li>
       </ul>
+      <p>Total: R$ {{ totalPrice }}</p>
       <button @click="finalizePurchase">Finalizar Compras</button>
     </div>
   </template>
   
   <script>
   export default {
-    computed: {
-      selectedProducts() {
-        return this.$store.getters["products/getSelectedProducts"];
-      },
+    props: {
+      selectedProducts: Array,
+      totalPrice: Number,
     },
     methods: {
       finalizePurchase() {
         // Implemente a lógica para finalizar a compra aqui
         // Por exemplo, você pode limpar o carrinho de compras
-        this.$store.dispatch("products/clearSelectedProducts");
-  
-        // Também pode redirecionar o usuário para uma página de checkout
-        // usando o router do Vue.js
+        this.$emit("clear-cart"); // Emitir um evento para o componente pai limpar o carrinho
       },
     },
   };

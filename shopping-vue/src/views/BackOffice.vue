@@ -233,20 +233,26 @@ export default {
       }, 4000);
     },
     sendSelectedProducts() {
-      // Filtrar apenas os produtos selecionados
-      const selectedProducts = this.products.filter((product) =>
-        this.selectedProducts.includes(product)
-      );
-      console.log(selectedProducts);
+      console.log('sendSelectedProducts');
+  // Filtrar apenas os produtos selecionados
+  const selectedProducts = this.products.filter((product) =>
+    this.selectedProducts.includes(product)
+  );
 
-      // Armazenar os produtos selecionados no localStorage
-      localStorage.setItem(
-        "selectedProducts",
-        JSON.stringify(selectedProducts)
-      );
-      // Exibir a Snackbar com a mensagem de sucesso
-      this.showSnackbar("Produtos selecionados enviados com sucesso!");
-    },
+  // Armazenar os produtos selecionados no localStorage
+  localStorage.setItem(
+    "selectedProducts",
+    JSON.stringify(selectedProducts)
+  );
+
+  // Atualizar a variável selectedProducts local
+  this.selectedProducts = selectedProducts;
+  console.log('produtos enviados', this.selectedProducts);
+
+  // Exibir a Snackbar com a mensagem de sucesso
+  this.showSnackbar("Produtos selecionados enviados com sucesso!");
+},
+
 
     async fetchProductsFromApi() {
       this.loading = true;
