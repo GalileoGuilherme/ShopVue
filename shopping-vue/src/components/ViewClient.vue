@@ -18,7 +18,7 @@
         </button>
       </div>
     </div>
-    <LeftMenuCart :cartProducts="cartProducts" />
+    <LeftMenuCart :cartProducts="cartProducts" :totalPrice="totalPrice" @clear-cart="clearCart" ref="leftMenuCart" />
 
     <!-- Modal de detalhes do produto -->
     <div class="modal" v-if="selectedProduct">
@@ -43,6 +43,7 @@ export default {
     return {
       selectedProduct: null,
       cartProducts: [],
+      showLeftMenuCart: false,
     };
   },
   computed: {
@@ -51,6 +52,13 @@ export default {
       const storedSelectedProducts = localStorage.getItem("selectedProducts");
       return storedSelectedProducts ? JSON.parse(storedSelectedProducts) : [];
     },
+    totalPrice() {
+    let total = 0;
+    for (const product of this.cartProducts) {
+      total += product.price;
+    }
+    return total;
+  },
   },
   methods: {
     ...mapActions("products", ["updateSelectedProducts"]),
@@ -66,12 +74,34 @@ export default {
       // Adicione o produto ao carrinho
       this.updateSelectedProducts(product);
       
-      // Emita um evento para enviar o produto para o componente LeftMenuCart
+      // Atualize a propriedade cartProducts com os produtos no carrinho
+      // this.cartProducts = this.products; // Ou a lógica que você usa para gerenciar o carrinho
+
+        // Emita um evento para enviar o produto para o componente LeftMenuCart
       this.$root.$emit("addToCart", product);
 
       // Exiba no console o produto que está sendo adicionado ao carrinho
       console.log("Produto adicionado ao carrinho:", product);
+
+      // Adicione o produto ao array cartProducts
+    this.cartProducts.push(product);
+
+      // Mostrar os produtos no carrinho no console
+    // Mostrar o componente LeftMenuCart
+    this.showLeftMenuCart = true;
     },
+    calculateTotalPrice() {
+    let total = 0;
+    for (const product of this.cartProducts) {
+      total += product.price;
+    }
+    return total;
+  },
+  clearCart() {
+    // Implemente a lógica para limpar o carrinho aqui
+    // Por exemplo, você pode definir this.cartProducts como um array vazio
+    this.cartProducts = [];
+  },
   },
 };
 </script>
