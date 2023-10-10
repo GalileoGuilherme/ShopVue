@@ -122,7 +122,7 @@ export default {
     // Carregue os produtos da API
     this.fetchProductsFromApi();
 
-    // Carregue produtos selecionados do localStorage
+    // Carregar produtos selecionados do localStorage
     const storedSelectedProducts = localStorage.getItem("selectedProducts");
     if (storedSelectedProducts) {
       this.selectedProducts = JSON.parse(storedSelectedProducts);
