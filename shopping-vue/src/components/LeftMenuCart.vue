@@ -1,14 +1,17 @@
 <template>
   <div class="left-menu-cart">
-    <h2>Carrinho de Compras</h2>
+    <h2 class="title">Carrinho de Compras</h2>
     <ul>
       <li v-for="product in cartProducts" :key="product.id" class="product-item">
         <span class="remove-item" @click="removeFromCart(product.id)">X</span>
-        {{ product.title }} - R$ {{ formatPrice(product.price) }}
+        {{ product.title }}<br> <h4>R$ {{ formatPrice(product.price) }}</h4>
       </li>
     </ul>
-    <p>Total: R$ {{ formatPrice(totalPrice) }}</p>
-    <button @click="finalizePurchase">Finalizar Compras</button>
+    <div class="emptyCart" v-if="cartProducts < 1">
+    <h3>O carrinho de compras está vazio</h3>
+  </div>
+    <h4 v-show="cartProducts > ''">Total: R$ {{ formatPrice(totalPrice) }}</h4>
+    <button v-if="cartProducts > ''" @click="finalizePurchase">Finalizar Compras</button>
   </div>
 </template>
 
@@ -44,6 +47,18 @@ export default {
 </script>
 
 <style scoped>
+
+.title{
+  margin-bottom: 15px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: #2c3e50;
+  
+}
+
+.emptyCart {
+  color: #969696;
+  margin-top: 155px;
+}
 .left-menu-cart {
   background-color: #f0f0f0;
   padding: 10px;
@@ -80,6 +95,7 @@ export default {
   cursor: pointer;
   color: red;
   font-weight: bold;
+  padding: 3px;
 }
 
 .left-menu-cart button {

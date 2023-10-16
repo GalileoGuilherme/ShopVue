@@ -6,8 +6,8 @@
         :key="product.id"
         class="product-item"
       >
-        <img :src="product.image" :alt="product.title" class="product-image" />
         <h3 class="product-title">{{ product.title }}</h3>
+        <img :src="product.image" :alt="product.title" class="product-image" />
         <button @click="showProductDetails(product)" class="show-details-button">
           Mostrar Detalhes
         </button>
@@ -71,20 +71,30 @@ export default {
       document.body.style.overflow = "auto";
     },
     addToCart(product) {
-      // Adicione o produto ao carrinho
-      this.updateSelectedProducts(product);
+  // Verifica se o produto já está no carrinho
+  const existingProduct = this.cartProducts.find(item => item.id === product.id);
 
-        // Emitir um evento para enviar o produto para o componente LeftMenuCart
-      this.$root.$emit("addToCart", product);
+  if (existingProduct) {
+    // O produto já está no carrinho, crie um novo ID aleatório para ele
+    const randomId = Math.random().toString(36).substr(2, 9);
+    product.id = randomId;
 
-      console.log("Produto adicionado ao carrinho:", product);
-
-      // Adicionar o produto ao array cartProducts
+    // Adicione o produto com o novo ID ao carrinho
     this.cartProducts.push(product);
+  } else {
+    // O produto não está no carrinho, adicione-o diretamente
+    this.cartProducts.push(product);
+  }
 
-    // Mostrar o componente LeftMenuCart
-    this.showLeftMenuCart = true;
-    },
+  // Emitir um evento para enviar o produto para o componente LeftMenuCart
+  this.$root.$emit("addToCart", product);
+
+  console.log("Produto adicionado ao carrinho:", product);
+
+  // Mostrar o componente LeftMenuCart
+  this.showLeftMenuCart = true;
+},
+
     calculateTotalPrice() {
     let total = 0;
     for (const product of this.cartProducts) {
