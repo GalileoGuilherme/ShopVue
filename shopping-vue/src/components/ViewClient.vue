@@ -44,21 +44,21 @@ export default {
       selectedProduct: null,
       cartProducts: [],
       showLeftMenuCart: false,
+      idCounter: 1, // Inicializa o contador em 1
     };
   },
   computed: {
     products() {
-      // Recupera os produtos selecionados do localStorage
       const storedSelectedProducts = localStorage.getItem("selectedProducts");
       return storedSelectedProducts ? JSON.parse(storedSelectedProducts) : [];
     },
     totalPrice() {
-    let total = 0;
-    for (const product of this.cartProducts) {
-      total += product.price;
-    }
-    return total;
-  },
+      let total = 0;
+      for (const product of this.cartProducts) {
+        total += product.price;
+      }
+      return total;
+    },
   },
   methods: {
     ...mapActions("products", ["updateSelectedProducts"]),
@@ -71,43 +71,35 @@ export default {
       document.body.style.overflow = "auto";
     },
     addToCart(product) {
-  // Verifica se o produto já está no carrinho
-  const existingProduct = this.cartProducts.find(item => item.id === product.id);
+      const existingProduct = this.cartProducts.find(item => item.id === product.id);
 
-  if (existingProduct) {
-    // O produto já está no carrinho, crie um novo ID aleatório para ele
-    const randomId = Math.random().toString(36).substr(2, 9);
-    product.id = randomId;
+      if (existingProduct) {
+        // Se o produto já existe no carrinho, gere um novo ID usando o contador
+        const newId = this.idCounter++;
+        product.id = newId;
 
-    // Adicione o produto com o novo ID ao carrinho
-    this.cartProducts.push(product);
-  } else {
-    // O produto não está no carrinho, adicione-o diretamente
-    this.cartProducts.push(product);
-  }
+        this.cartProducts.push(product);
+      } else {
+        this.cartProducts.push(product);
+      }
 
-  // Emitir um evento para enviar o produto para o componente LeftMenuCart
-  this.$root.$emit("addToCart", product);
-
-  console.log("Produto adicionado ao carrinho:", product);
-
-  // Mostrar o componente LeftMenuCart
-  this.showLeftMenuCart = true;
-},
-
+      this.$root.$emit("addToCart", product);
+      this.showLeftMenuCart = true;
+    },
     calculateTotalPrice() {
-    let total = 0;
-    for (const product of this.cartProducts) {
-      total += product.price;
-    }
-    return total;
-  },
-  clearCart() {
-    this.cartProducts = [];
-  },
+      let total = 0;
+      for (const product of this.cartProducts) {
+        total += product.price;
+      }
+      return total;
+    },
+    clearCart() {
+      this.cartProducts = [];
+    },
   },
 };
 </script>
+
 
 <style scoped>
 .product-grid {

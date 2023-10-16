@@ -2,7 +2,7 @@
   <div class="left-menu-cart">
     <h2 class="title">Carrinho de Compras</h2>
     <ul>
-      <li v-for="product in cartProducts" :key="product.id" class="product-item">
+      <li v-for="(product, index) in cartProducts" :key="index" class="product-item">
         <span class="remove-item" @click="removeFromCart(product.id)">X</span>
         <img :src="product.image" alt="">
         {{ product.title }}
@@ -20,6 +20,7 @@
     <div class="snackbar" :class="{ show: showSnackbar }">{{ snackbarMessage }}</div>
   </div>
 </template>
+
 
 <script>
 export default {
