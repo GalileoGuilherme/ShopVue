@@ -12,7 +12,7 @@
           Mostrar Detalhes
         </button>
         
-        <!-- Adicione o botão "Adicionar ao Carrinho" -->
+        <!-- Botão "Adicionar ao Carrinho" -->
         <button @click="addToCart(product)" class="show-details-button">
           Adicionar ao Carrinho
         </button>
@@ -73,20 +73,15 @@ export default {
     addToCart(product) {
       // Adicione o produto ao carrinho
       this.updateSelectedProducts(product);
-      
-      // Atualize a propriedade cartProducts com os produtos no carrinho
-      // this.cartProducts = this.products; // Ou a lógica que você usa para gerenciar o carrinho
 
-        // Emita um evento para enviar o produto para o componente LeftMenuCart
+        // Emitir um evento para enviar o produto para o componente LeftMenuCart
       this.$root.$emit("addToCart", product);
 
-      // Exiba no console o produto que está sendo adicionado ao carrinho
       console.log("Produto adicionado ao carrinho:", product);
 
-      // Adicione o produto ao array cartProducts
+      // Adicionar o produto ao array cartProducts
     this.cartProducts.push(product);
 
-      // Mostrar os produtos no carrinho no console
     // Mostrar o componente LeftMenuCart
     this.showLeftMenuCart = true;
     },
@@ -98,8 +93,6 @@ export default {
     return total;
   },
   clearCart() {
-    // Implemente a lógica para limpar o carrinho aqui
-    // Por exemplo, você pode definir this.cartProducts como um array vazio
     this.cartProducts = [];
   },
   },

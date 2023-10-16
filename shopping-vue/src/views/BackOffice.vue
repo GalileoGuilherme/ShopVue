@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <!-- Botão para enviar os dados -->
+    <!-- Botão para enviar os produtos para a view de cliente -->
     <button class="edit-button" @click="sendSelectedProducts">
       Enviar Produtos Selecionados
     </button>
@@ -158,10 +158,10 @@ export default {
     },
 
     addProduct(newProduct) {
-      // Adicione o novo produto ao início da lista de produtos
+      // Adicionar o novo produto ao início da lista de produtos
       this.products.unshift(newProduct);
 
-      // Salve a lista atualizada no localStorage
+      // Salvar a lista atualizada no localStorage
       localStorage.setItem("products", JSON.stringify(this.products));
     },
 
@@ -218,8 +218,7 @@ export default {
       //verificar se o valor é um número válido
       const validPricePattern = /^\d+(\.\d{1,2})?$/;
       if (!validPricePattern.test(this.product.price)) {
-        // Se não for um número válido, você pode exibir uma mensagem de erro ou tomar a ação apropriada.
-        // Neste exemplo, apenas definimos o valor de preço para 0.
+
         this.product.price = "0";
       }
     },
@@ -227,7 +226,7 @@ export default {
       this.snackbarText = message;
       this.snackbarVisible = true;
 
-      // Esconda a Snackbar após alguns segundos (por exemplo, 4 segundos)
+      // Esconder a Snackbar após 4 segundos
       setTimeout(() => {
         this.snackbarVisible = false;
       }, 4000);

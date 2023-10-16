@@ -21,19 +21,18 @@ export default {
   },
   methods: {
     finalizePurchase() {
-      // Implemente a lógica para finalizar a compra aqui
-      // Por exemplo, você pode limpar o carrinho de compras
+      // Implementar a lógica para finalizar a compra aqui
       this.$emit("clear-cart");
     },
     removeFromCart(productId) {
-      // Encontre o índice do produto com base no productId
+      // Encontrar o índice do produto com base no productId
       const index = this.cartProducts.findIndex(product => product.id === productId);
       
       if (index !== -1) {
-        // Remova o produto da lista cartProducts diretamente
+        // Remover o produto da lista cartProducts diretamente
         this.cartProducts.splice(index, 1);
         
-        // Emita um evento para informar ao componente pai que o carrinho foi atualizado
+        // Emitir um evento para informar ao componente pai que o carrinho foi atualizado
         this.$emit("update-cart", this.cartProducts);
       }
     },
@@ -45,7 +44,6 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos para o carrinho de compras */
 .left-menu-cart {
   background-color: #f0f0f0;
   padding: 10px;
