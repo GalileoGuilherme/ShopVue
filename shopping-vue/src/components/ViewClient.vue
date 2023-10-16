@@ -13,7 +13,7 @@
         </button>
         
         <!-- Adicione o botão "Adicionar ao Carrinho" -->
-        <button @click="addToCart(product)" class="add-to-cart-button">
+        <button @click="addToCart(product)" class="show-details-button">
           Adicionar ao Carrinho
         </button>
       </div>
@@ -131,7 +131,7 @@ export default {
 }
 
 .show-details-button {
-  background-color: #007bff;
+  background-color: #42b983;
   color: #fff;
   border: none;
   cursor: pointer;
@@ -141,7 +141,7 @@ export default {
 }
 
 .show-details-button:hover {
-  background-color: #0056b3;
+  background-color: #2e865f;
 }
 
 /* Estilos para o modal */
