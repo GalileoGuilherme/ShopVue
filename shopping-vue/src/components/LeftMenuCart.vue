@@ -2,7 +2,7 @@
     <div class="left-menu-cart">
       <h2>Carrinho de Compras</h2>
       <ul>
-        <li v-for="product in selectedProducts" :key="product.id">
+        <li v-for="product in cartProducts" :key="product.id">
           {{ product.title }} - R$ {{ formatPrice(product.price) }}
         </li>
       </ul>
@@ -16,6 +16,7 @@
     props: {
       selectedProducts: Array,
       totalPrice: Number,
+      cartProducts: Object,
     },
     methods: {
       finalizePurchase() {
