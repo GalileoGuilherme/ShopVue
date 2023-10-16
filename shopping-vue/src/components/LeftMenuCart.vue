@@ -4,7 +4,10 @@
     <ul>
       <li v-for="product in cartProducts" :key="product.id" class="product-item">
         <span class="remove-item" @click="removeFromCart(product.id)">X</span>
-        {{ product.title }}<br> <h4>R$ {{ formatPrice(product.price) }}</h4>
+        <img :src="product.image" alt="">
+        {{ product.title }}
+        <br> 
+        <h4>R$ {{ formatPrice(product.price) }}</h4>
       </li>
     </ul>
     <div class="emptyCart" v-if="cartProducts < 1">
@@ -53,6 +56,10 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   color: #2c3e50;
   
+}
+
+img {
+  max-width: 80px;
 }
 
 .emptyCart {
