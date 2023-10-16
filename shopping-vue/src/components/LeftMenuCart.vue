@@ -10,24 +10,42 @@
         <h4>R$ {{ formatPrice(product.price) }}</h4>
       </li>
     </ul>
-    <div class="emptyCart" v-if="cartProducts < 1">
-    <h3>O carrinho de compras está vazio</h3>
-  </div>
-    <h4 v-show="cartProducts > ''">Total: R$ {{ formatPrice(totalPrice) }}</h4>
-    <button v-if="cartProducts > ''" @click="finalizePurchase">Finalizar Compras</button>
+    <div class="emptyCart" v-if="cartProducts.length < 1">
+      <h3>O carrinho está vazio</h3>
+    </div>
+    <h4 v-show="cartProducts.length > 0">Total: R$ {{ formatPrice(totalPrice) }}</h4>
+    <button v-if="cartProducts.length > 0" @click="finalizePurchase">Finalizar Compras</button>
+
+    <!-- Snackbar para exibir a mensagem de compra realizada com sucesso -->
+    <div class="snackbar" :class="{ show: showSnackbar }">{{ snackbarMessage }}</div>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      showSnackbar: false,
+      snackbarMessage: "Compra realizada com sucesso!",
+    };
+  },
   props: {
-    selectedProducts: Array,
-    totalPrice: Number,
     cartProducts: Array,
+    totalPrice: Number,
   },
   methods: {
     finalizePurchase() {
       // Implementar a lógica para finalizar a compra aqui
+
+      // Exibir o Snackbar
+      this.showSnackbar = true;
+
+      // Definir um tempo limite para ocultar o Snackbar após alguns segundos
+      setTimeout(() => {
+        this.showSnackbar = false;
+      }, 3000); // Snackbar será ocultado após 3 segundos (3000 milissegundos)
+
+      // Limpar o carrinho
       this.$emit("clear-cart");
     },
     removeFromCart(productId) {
@@ -50,12 +68,10 @@ export default {
 </script>
 
 <style scoped>
-
-.title{
+.title {
   margin-bottom: 15px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   color: #2c3e50;
-  
 }
 
 img {
@@ -63,7 +79,7 @@ img {
 }
 
 .emptyCart {
-  color: #969696;
+  color: #d1cccc;
   margin-top: 155px;
 }
 .left-menu-cart {
@@ -103,6 +119,24 @@ img {
   color: red;
   font-weight: bold;
   padding: 3px;
+}
+
+.snackbar {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  z-index: 1;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.snackbar.show {
+  display: block;
 }
 
 .left-menu-cart button {
