@@ -35,7 +35,6 @@ const routes = [
     component: AutoLogout,
     meta: { requiresAuth: true },
   },
-  // Outras rotas da sua aplicação
 ];
 
 const router = new VueRouter({
@@ -44,16 +43,16 @@ const router = new VueRouter({
   routes,
 });
 
-// Defina uma guarda de rota global para verificar se o usuário está logado
+// rota global para verificar se o usuário está logado
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // Verifique se o usuário está autenticado no localStorage
+    // Verifica se o usuário está autenticado no localStorage
     const userIsLoggedIn = localStorage.getItem('userIsLoggedIn') === 'true';
 
     if (userIsLoggedIn) {
       next();
     } else {
-      // Redirecione para a página de login e salve a rota original
+      // Redireciona para a página de login e salva a rota original
       next({
         path: '/login',
         query: { redirect: to.fullPath },

@@ -80,7 +80,9 @@
             <button type="submit" class="edit-button">
               {{ editMode ? "Salvar" : "Adicionar" }}
             </button>
-            <button class="edit-button-cancel" @click="closeProductForm">Cancelar</button>
+            <button class="edit-button-cancel" @click="closeProductForm">
+              Cancelar
+            </button>
           </div>
         </form>
       </div>
@@ -218,7 +220,6 @@ export default {
       //verificar se o valor é um número válido
       const validPricePattern = /^\d+(\.\d{1,2})?$/;
       if (!validPricePattern.test(this.product.price)) {
-
         this.product.price = "0";
       }
     },
@@ -232,26 +233,25 @@ export default {
       }, 4000);
     },
     sendSelectedProducts() {
-      console.log('sendSelectedProducts');
-  // Filtrar apenas os produtos selecionados
-  const selectedProducts = this.products.filter((product) =>
-    this.selectedProducts.includes(product)
-  );
+      console.log("sendSelectedProducts");
+      // Filtra apenas os produtos selecionados
+      const selectedProducts = this.products.filter((product) =>
+        this.selectedProducts.includes(product)
+      );
 
-  // Armazenar os produtos selecionados no localStorage
-  localStorage.setItem(
-    "selectedProducts",
-    JSON.stringify(selectedProducts)
-  );
+      // Armazena os produtos selecionados no localStorage
+      localStorage.setItem(
+        "selectedProducts",
+        JSON.stringify(selectedProducts)
+      );
 
-  // Atualizar a variável selectedProducts local
-  this.selectedProducts = selectedProducts;
-  console.log('produtos enviados', this.selectedProducts);
+      // Atualiza a variável selectedProducts local
+      this.selectedProducts = selectedProducts;
+      console.log("produtos enviados", this.selectedProducts);
 
-  // Exibir a Snackbar com a mensagem de sucesso
-  this.showSnackbar("Produtos selecionados enviados com sucesso!");
-},
-
+      // Exibe a Snackbar com a mensagem de sucesso
+      this.showSnackbar("Produtos selecionados enviados com sucesso!");
+    },
 
     async fetchProductsFromApi() {
       this.loading = true;

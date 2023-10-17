@@ -1,44 +1,52 @@
 <template>
   <div>
     <div class="product-grid">
-      <div
-        v-for="product in products"
-        :key="product.id"
-        class="product-item"
-      >
+      <div v-for="product in products" :key="product.id" class="product-item">
         <h3 class="product-title">{{ product.title }}</h3>
         <img :src="product.image" :alt="product.title" class="product-image" />
-        <button @click="showProductDetails(product)" class="show-details-button">
+        <button
+          @click="showProductDetails(product)"
+          class="show-details-button"
+        >
           Mostrar Detalhes
         </button>
-        
+
         <!-- Botão "Adicionar ao Carrinho" -->
         <button @click="addToCart(product)" class="show-details-button">
           Adicionar ao Carrinho
         </button>
       </div>
     </div>
-    <LeftMenuCart :cartProducts="cartProducts" :totalPrice="totalPrice" @clear-cart="clearCart" ref="leftMenuCart" />
+    <LeftMenuCart
+      :cartProducts="cartProducts"
+      :totalPrice="totalPrice"
+      @clear-cart="clearCart"
+      ref="leftMenuCart"
+    />
 
     <!-- Modal de detalhes do produto -->
     <div class="modal" v-if="selectedProduct">
       <div class="modal-content">
         <span class="close" @click="closeProductDetails">&times;</span>
-        <img :src="selectedProduct.image" :alt="selectedProduct.title" class="modal-image" />
+        <img
+          :src="selectedProduct.image"
+          :alt="selectedProduct.title"
+          class="modal-image"
+        />
         <h3>{{ selectedProduct.title }}</h3>
         <p>{{ selectedProduct.description }}</p>
         <p>Preço: R$ {{ selectedProduct.price }}</p>
       </div>
     </div>
     <!-- snackbar -->
-    
 
+    <!-- snackbar -->
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import LeftMenuCart from './LeftMenuCart.vue';
+import LeftMenuCart from "./LeftMenuCart.vue";
 
 export default {
   components: { LeftMenuCart },
@@ -74,7 +82,9 @@ export default {
       document.body.style.overflow = "auto";
     },
     addToCart(product) {
-      const existingProduct = this.cartProducts.find(item => item.id === product.id);
+      const existingProduct = this.cartProducts.find(
+        (item) => item.id === product.id
+      );
 
       if (existingProduct) {
         const newId = this.idCounter++;

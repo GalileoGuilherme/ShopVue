@@ -35,10 +35,10 @@ export default {
   watch: {
     $route(to) {
       if (to.path === "/login") {
-        // Você está na página de login, desative o botão de login
+        // página de login desativa o botão de login
         this.userIsLoggedIn = false;
       } else {
-        // Não está na página de login, verifique o localStorage para atualizar o estado do usuário
+        // Não está na página de login, verifica o localStorage para atualizar o estado do usuário
         const userIsLoggedIn = localStorage.getItem("userIsLoggedIn");
         this.userIsLoggedIn = userIsLoggedIn === "true";
       }
@@ -52,7 +52,7 @@ export default {
         localStorage.setItem("userIsLoggedIn", "true");
         this.userIsLoggedIn = true;
 
-        // Verifique se o usuário não está já na rota raiz
+        // Verifica se o usuário não está já na rota raiz
         if (this.$route.path !== "/") {
           this.$router.push("/");
         }
@@ -89,7 +89,6 @@ export default {
   /* margin-left: 170px; */
 }
 
-<style scoped>
 /* Estilo quando o usuário está logado */
 .header {
   background-color: #42b983;
