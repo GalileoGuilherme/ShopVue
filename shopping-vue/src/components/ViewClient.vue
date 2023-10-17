@@ -30,6 +30,9 @@
         <p>Preço: R$ {{ selectedProduct.price }}</p>
       </div>
     </div>
+    <!-- snackbar -->
+    
+
   </div>
 </template>
 
@@ -44,7 +47,7 @@ export default {
       selectedProduct: null,
       cartProducts: [],
       showLeftMenuCart: false,
-      idCounter: 1, // Inicializa o contador em 1
+      idCounter: 1,
     };
   },
   computed: {
@@ -74,10 +77,8 @@ export default {
       const existingProduct = this.cartProducts.find(item => item.id === product.id);
 
       if (existingProduct) {
-        // Se o produto já existe no carrinho, gere um novo ID usando o contador
         const newId = this.idCounter++;
         product.id = newId;
-
         this.cartProducts.push(product);
       } else {
         this.cartProducts.push(product);
@@ -85,6 +86,9 @@ export default {
 
       this.$root.$emit("addToCart", product);
       this.showLeftMenuCart = true;
+
+      // Emite o evento para mostrar o snackbar
+      this.$root.$emit("showSnackbar");
     },
     calculateTotalPrice() {
       let total = 0;
@@ -99,6 +103,7 @@ export default {
   },
 };
 </script>
+
 
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="header">
+    <nav class="header" :style="{ marginLeft: userIsLoggedIn ? '170px' : '0' }">
       <div class="left-header">
         <router-link to="/" class="header-link">ViewClient</router-link> |
         <router-link to="/backOffice" class="header-link"
@@ -8,7 +8,12 @@
         >
       </div>
       <div class="right-header">
-        <button v-if="!userIsLoggedIn" @click="login" class="login-button">
+        <button
+          v-if="!userIsLoggedIn && $route.path !== '/login'"
+          @click="login"
+          class="login-button"
+          :disabled="$route.path === '/login'"
+        >
           Login
         </button>
         <button v-if="userIsLoggedIn" @click="logout" class="logout-button">
@@ -24,31 +29,43 @@
 export default {
   data() {
     return {
-      userIsLoggedIn: false, // estado inicial do usuário como não logado
+      userIsLoggedIn: false,
     };
   },
-  created() {
-    // Verifica o localStorage para determinar o estado do usuário no início
-    
-    const userIsLoggedIn = localStorage.getItem("userIsLoggedIn");
-    this.userIsLoggedIn = userIsLoggedIn === "true";
+  watch: {
+    $route(to) {
+      if (to.path === "/login") {
+        // Você está na página de login, desative o botão de login
+        this.userIsLoggedIn = false;
+      } else {
+        // Não está na página de login, verifique o localStorage para atualizar o estado do usuário
+        const userIsLoggedIn = localStorage.getItem("userIsLoggedIn");
+        this.userIsLoggedIn = userIsLoggedIn === "true";
+      }
+    },
   },
-
   methods: {
     login() {
-      // Lógica de login - atualiza o estado do usuário
-      this.userIsLoggedIn = true;
-      localStorage.setItem("userIsLoggedIn", "true"); // Armazena o estado do usuário no localStorage
-    },
-    logout() {
-    // Lógica de logout - atualiza o estado do usuário
-    this.userIsLoggedIn = false;
-    localStorage.removeItem('userIsLoggedIn'); // Remova o estado de autenticação do localStorage
-    localStorage.removeItem('userCredentials'); // Limpe as credenciais do usuário, se estiverem armazenadas
+      const validUser = true;
 
-    // Redirecione para a página de login
-    this.$router.push('/login');
-  },
+      if (validUser) {
+        localStorage.setItem("userIsLoggedIn", "true");
+        this.userIsLoggedIn = true;
+
+        // Verifique se o usuário não está já na rota raiz
+        if (this.$route.path !== "/") {
+          this.$router.push("/");
+        }
+      } else {
+        alert("Login falhou. Verifique suas credenciais.");
+      }
+    },
+
+    logout() {
+      this.userIsLoggedIn = false;
+      localStorage.removeItem("userIsLoggedIn");
+      this.$router.push("/login");
+    },
   },
 };
 </script>
@@ -62,6 +79,18 @@ export default {
   color: #2c3e50;
 }
 
+.header {
+  background-color: #42b983;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  /* margin-left: 170px; */
+}
+
+<style scoped>
+/* Estilo quando o usuário está logado */
 .header {
   background-color: #42b983;
   padding: 20px;
