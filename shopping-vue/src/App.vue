@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="header" :style="{ marginLeft: userIsLoggedIn ? '170px' : '0' }">
+    <nav class="header" :style="headerStyles">
       <div class="left-header">
         <router-link to="/" class="header-link">ViewClient</router-link> |
         <router-link to="/backOffice" class="header-link"
@@ -42,6 +42,17 @@ export default {
         const userIsLoggedIn = localStorage.getItem("userIsLoggedIn");
         this.userIsLoggedIn = userIsLoggedIn === "true";
       }
+    },
+  },
+  computed: {
+    headerStyles() {
+      const cartProducts = JSON.parse(localStorage.getItem("cartProducts"));
+      console.log('cartProducts',cartProducts);
+      console.log('userIsLoggedIn',this.userIsLoggedIn);
+      return {
+        marginLeft: this.userIsLoggedIn && cartProducts.length > 0 ? "170px" : "0",
+        marginRight: this.$route.path === "/backOffice" ? "170px" : "0",
+      };
     },
   },
   methods: {
@@ -86,6 +97,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  /* margin-right: 170px; */
   /* margin-left: 170px; */
 }
 

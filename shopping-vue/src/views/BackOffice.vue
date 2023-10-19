@@ -1,5 +1,7 @@
 <template>
   <div class="view">
+    <h3>BackOffice</h3>
+    {{ userIsLoggedIn }}
     <div v-if="loading" class="loader">Carregando...</div>
 
     <!-- Grid de produtos -->
@@ -30,15 +32,18 @@
     </div>
 
     <!-- Botão para enviar os produtos para a view de cliente -->
-    <button class="edit-button" @click="sendSelectedProducts">
+    <!-- <button class="edit-button" @click="sendSelectedProducts">
       Enviar Produtos Selecionados
-    </button>
+    </button> -->
     <LeftMenu
+      v-if="!userIsLoggedIn"
       :selectedProducts="selectedProducts"
       @send-products="sendSelectedProducts"
       @update-data-with-api="fetchProductsFromApi"
       @add-product="addProduct"
     />
+
+    <RightMenu />
     <!-- Modal de adição/edição de produtos -->
     <div v-if="isProductFormVisible" class="product-form">
       <div class="modal-content">
@@ -96,13 +101,16 @@
 <script>
 import axios from "axios";
 import LeftMenu from "@/components/LeftMenu.vue";
+import RightMenu from "@/components/RightMenu.vue";
 
 export default {
   components: {
     LeftMenu,
+    RightMenu,
   },
   data() {
     return {
+      addedProducts: [],
       products: [],
       selectedProducts: [],
       loading: false,
@@ -118,9 +126,16 @@ export default {
       snackbarVisible: false,
       editMode: false,
       shouldUpdateData: false,
+      userIsLoggedIn: false,
     };
   },
   mounted() {
+    // Recupera os produtos(compras finalizadas) do localStorage ao carregar a página
+    const storedAddedProducts = localStorage.getItem("addedProducts");
+    if (storedAddedProducts) {
+      this.addedProducts = JSON.parse(storedAddedProducts);
+    }
+
     // Carregue os produtos da API
     this.fetchProductsFromApi();
 
@@ -150,6 +165,11 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    addProductToLocalStorage(product) {
+      this.addedProducts.push(product);
+      localStorage.setItem("addedProducts", JSON.stringify(this.addedProducts));
     },
 
     updateSelectedProducts() {
@@ -326,6 +346,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
+  margin-right: 170px;
 }
 
 .product-card {

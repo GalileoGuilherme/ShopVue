@@ -87,6 +87,7 @@ export default {
 
 .left-menu h3 {
   margin-top: 0;
+  margin-bottom: 10px;
 }
 
 .left-menu ul {

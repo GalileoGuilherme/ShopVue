@@ -18,6 +18,8 @@
       </div>
     </div>
     <LeftMenuCart
+      v-if="!userIsLoggedIn && cartProducts.length > 0"
+      :userIsLoggedIn="userIsLoggedIn"
       :cartProducts="cartProducts"
       :totalPrice="totalPrice"
       @clear-cart="clearCart"

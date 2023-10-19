@@ -2,22 +2,32 @@
   <div class="left-menu-cart">
     <h2 class="title">Carrinho de Compras</h2>
     <ul>
-      <li v-for="(product, index) in cartProducts" :key="index" class="product-item">
+      <li
+        v-for="(product, index) in cartProducts"
+        :key="index"
+        class="product-item"
+      >
         <span class="remove-item" @click="removeFromCart(product.id)">X</span>
-        <img :src="product.image" alt="">
+        <img :src="product.image" alt="" />
         {{ product.title }}
-        <br> 
+        <br />
         <h4>R$ {{ formatPrice(product.price) }}</h4>
       </li>
     </ul>
     <div class="emptyCart" v-if="cartProducts.length < 1">
       <h3>O carrinho está vazio</h3>
     </div>
-    <h4 v-show="cartProducts.length > 0">Total: R$ {{ formatPrice(totalPrice) }}</h4>
-    <button v-if="cartProducts.length > 0" @click="finalizePurchase">Finalizar Compras</button>
+    <h4 v-show="cartProducts.length > 0">
+      Total: R$ {{ formatPrice(totalPrice) }}
+    </h4>
+    <button v-if="cartProducts.length > 0" @click="finalizePurchase">
+      Finalizar Compras
+    </button>
 
     <!-- Snackbar para exibir a mensagem de compra realizada com sucesso -->
-    <div class="snackbar" :class="{ show: showSnackbar }">{{ snackbarMessage }}</div>
+    <div class="snackbar" :class="{ show: showSnackbar }">
+      {{ snackbarMessage }}
+    </div>
   </div>
 </template>
 
@@ -34,14 +44,30 @@ export default {
     cartProducts: Array,
     totalPrice: Number,
   },
+  watch: {
+    cartProducts: {
+      handler(newCartProducts) {
+        // Converte o novo array cartProducts em uma string JSON
+        const cartProductsJSON = JSON.stringify(newCartProducts);
+
+        // Armazena a string JSON no localStorage
+        localStorage.setItem("cartProducts", cartProductsJSON);
+      },
+      deep: true, // Observa alterações profundas no array
+    },
+  },
   methods: {
     finalizePurchase() {
-      // Implementar a lógica para finalizar a compra aqui
+      //Converte o array cartProducts em uma string JSON
+      const cartProductsJSON = JSON.stringify(this.cartProducts);
+
+      //Armazena a string JSON no localStorage
+      localStorage.setItem("cartProducts", cartProductsJSON);
 
       // Exibir o Snackbar
       this.showSnackbar = true;
 
-      // Definir um tempo limite para ocultar o Snackbar após alguns segundos
+      // Definir um tempo limite para ocultar o Snackbar
       setTimeout(() => {
         this.showSnackbar = false;
       }, 3000); // Snackbar será ocultado após 3 segundos (3000 milissegundos)
@@ -51,12 +77,14 @@ export default {
     },
     removeFromCart(productId) {
       // Encontrar o índice do produto com base no productId
-      const index = this.cartProducts.findIndex(product => product.id === productId);
-      
+      const index = this.cartProducts.findIndex(
+        (product) => product.id === productId
+      );
+
       if (index !== -1) {
         // Remover o produto da lista cartProducts diretamente
         this.cartProducts.splice(index, 1);
-        
+
         // Emitir um evento para informar ao componente pai que o carrinho foi atualizado
         this.$emit("update-cart", this.cartProducts);
       }
@@ -128,7 +156,7 @@ img {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 15px;
   border-radius: 5px;
