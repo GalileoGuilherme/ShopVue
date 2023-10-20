@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-
     <ViewCLient msg="Lista de Produtos"/>
   </div>
 </template>
