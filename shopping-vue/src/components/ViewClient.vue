@@ -58,6 +58,7 @@ export default {
       cartProducts: [],
       showLeftMenuCart: false,
       idCounter: 1,
+      userIsLoggedIn: false,
     };
   },
   computed: {

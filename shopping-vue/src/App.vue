@@ -50,7 +50,7 @@ export default {
       console.log('cartProducts',cartProducts);
       console.log('userIsLoggedIn',this.userIsLoggedIn);
       return {
-        marginLeft: this.userIsLoggedIn && cartProducts.length > 0 ? "170px" : "0",
+        marginLeft: this.userIsLoggedIn && cartProducts > 0 ? "170px" : "0",
         marginRight: this.$route.path === "/backOffice" ? "170px" : "0",
       };
     },
