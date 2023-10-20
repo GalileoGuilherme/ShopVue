@@ -12,7 +12,7 @@
         </button>
 
         <!-- Botão "Adicionar ao Carrinho" -->
-        <button @click="addToCart(product)" class="show-details-button">
+        <button v-if="!userIsLoggedIn" @click="addToCart(product)" class="show-details-button">
           Adicionar ao Carrinho
         </button>
       </div>

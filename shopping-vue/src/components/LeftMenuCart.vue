@@ -121,6 +121,7 @@ img {
   top: 0;
   width: 150px;
   overflow-y: auto;
+  margin-top: 77px;
 }
 
 .left-menu-cart h2 {

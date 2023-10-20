@@ -3,9 +3,7 @@
     <nav class="header" :style="headerStyles">
       <div class="left-header">
         <router-link to="/" class="header-link">ViewClient</router-link> |
-        <router-link to="/backOffice" class="header-link"
-          >BackOffice</router-link
-        >
+        <router-link to="/backOffice" class="header-link">BackOffice</router-link>
       </div>
       <div class="right-header">
         <button
@@ -26,6 +24,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -35,7 +34,7 @@ export default {
   watch: {
     $route(to) {
       if (to.path === "/login") {
-        // página de login desativa o botão de login
+        // Página de login desativa o botão de login
         this.userIsLoggedIn = false;
       } else {
         // Não está na página de login, verifica o localStorage para atualizar o estado do usuário
@@ -46,13 +45,16 @@ export default {
   },
   computed: {
     headerStyles() {
-      const cartProducts = JSON.parse(localStorage.getItem("cartProducts"));
-      console.log('cartProducts',cartProducts);
-      console.log('userIsLoggedIn',this.userIsLoggedIn);
+      console.log("logado", this.userIsLoggedIn);
+      console.log("path", this.$route.path === "/");
       return {
-        marginLeft: this.userIsLoggedIn && cartProducts > 0 ? "170px" : "0",
+        marginLeft:
+          this.userIsLoggedIn && this.$route.path === "/backOffice"
+            ? "170px"
+            : "0",
         marginRight: this.$route.path === "/backOffice" ? "170px" : "0",
       };
+      
     },
   },
   methods: {
@@ -97,8 +99,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  /* margin-right: 170px; */
-  /* margin-left: 170px; */
 }
 
 /* Estilo quando o usuário está logado */
@@ -146,5 +146,3 @@ export default {
   color: #2c3e50;
 }
 </style>
-
-

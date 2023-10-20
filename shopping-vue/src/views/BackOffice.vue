@@ -1,7 +1,6 @@
 <template>
   <div class="view">
     <h3>BackOffice</h3>
-    {{ userIsLoggedIn }}
     <div v-if="loading" class="loader">Carregando...</div>
 
     <!-- Grid de produtos -->
