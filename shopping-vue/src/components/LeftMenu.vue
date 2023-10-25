@@ -2,6 +2,7 @@
   <div class="left-menu">
     <h3>Produtos Selecionados</h3>
     <ul>
+      <!-- Itera sobre os produtos selecionados e exibe cada um -->
       <li v-for="(product, index) in selectedProducts" :key="product.id">
         <div class="marker">{{ index + 1 }}</div> {{ product.title }}
       </li>
@@ -17,6 +18,7 @@
       Adicionar Produto
     </button>
 
+    <!-- Botão para atualizar a lista de produtos com dados da API -->
     <button class="send-button" @click="updateDataWithApi">
       Atualizar lista de produtos com a API
     </button>
@@ -26,16 +28,17 @@
 <script>
 export default {
   props: {
-    selectedProducts: Array,
+    selectedProducts: Array, // Define uma prop chamado selectedProducts que é um array
   },
   data() {
     return {
-      // Create a copy of selectedProducts to work with
+      // Cria uma cópia de selectedProducts para trabalhar com ela
       selectedProductsCopy: [...this.selectedProducts],
     };
   },
   methods: {
     addNewProduct() {
+      // Cria um novo produto
       const newProduct = {
         id: Date.now(),
         title: "Novo Produto",
@@ -44,26 +47,25 @@ export default {
         image: "",
       };
 
-      // Modify the copy, not the prop
+      // Modifica a cópia, não a prop original
       this.selectedProductsCopy.push(newProduct);
 
-      // Emit an event to update the parent component
+      // Emite um evento para atualizar o componente pai
       this.$emit("add-product", newProduct);
     },
 
     sendSelectedProducts() {
-      // Emit an event to notify the parent component
+      // Emite um evento para notificar o componente pai
       this.$emit("send-products");
     },
 
     updateDataWithApi() {
-      // Emit an event to notify the parent component
+      // Emite um evento para notificar o componente pai
       this.$emit("update-data-with-api");
     },
   },
   mounted() {
-    // You can initialize the selectedProductsCopy here if needed.
-    // Recupere a lista de produtos selecionados do localStorage quando o componente é montado
+    // Recupera a lista de produtos selecionados do localStorage quando o componente é montado
     const storedSelectedProducts = localStorage.getItem("selectedProducts");
     if (storedSelectedProducts) {
       this.selectedProductsCopy = JSON.parse(storedSelectedProducts);

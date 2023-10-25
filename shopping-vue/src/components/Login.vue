@@ -1,7 +1,11 @@
 <template>
+  <!-- Container para a página de login -->
   <div class="login-container">
+    <!-- Título da página de login -->
     <h2 class="login-title">Login</h2>
+    <!-- Formulário de login -->
     <form class="login-form">
+      <!-- Campo de entrada para o nome de usuário -->
       <div class="form-group">
         <label for="username">Nome de Usuário:</label>
         <input
@@ -11,8 +15,9 @@
           placeholder="Nome de usuário"
         />
       </div>
+      <!-- Campo de entrada para a senha -->
       <div class="form-group">
-        <label for password>Senha:</label>
+        <label for="password">Senha:</label>
         <input
           v-model="password"
           type="password"
@@ -20,30 +25,33 @@
           placeholder="Senha"
         />
       </div>
+      <!-- Botão para acionar a função de login -->
       <button @click="login" class="login-button">Login</button>
     </form>
   </div>
 </template>
   
-  <script>
+<script>
 export default {
   data() {
     return {
+      // Dados do formulário de login
       username: "",
       password: "",
     };
   },
   methods: {
     login() {
-      const validUser = true;
+      const validUser = true; // Simula a autenticação bem-sucedida
 
       if (validUser) {
         // Definir o usuário como autenticado no localStorage
         localStorage.setItem("userIsLoggedIn", true);
 
-        // Redireciona para a página inicial
+        // Redirecionar para a página inicial (rota "/")
         this.$router.push("/");
       } else {
+        // Exibir um alerta em caso de falha no login
         alert("Login falhou. Verifique suas credenciais.");
       }
     },
@@ -51,7 +59,7 @@ export default {
 };
 </script>
   
-  <style scoped>
+<style scoped>
 .login-container {
   display: flex;
   flex-direction: column;
@@ -101,4 +109,3 @@ input {
   background-color: #2e865f;
 }
 </style>
-  

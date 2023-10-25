@@ -1,38 +1,41 @@
 <template>
-    <div class="right-menu">
-      <h3>Comparas finalizadas</h3>
-      <ul>
-        <li v-for="(product, index) in addedProducts" :key="index" class="added-product-item">
-          <!-- <img :src="product.image" alt=""> -->
-          {{ product.title }}
-          <br> 
-          <h4>R$ {{ formatPrice(product.price) }}</h4>
-        </li>
-      </ul>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-        return {
-            addedProducts: []
-        }
-    },
-    mounted() {
-    // Recupera os produtos do localStorage ao carregar o componente
-    const cartProductsJSON = localStorage.getItem("cartProducts");
-    if (cartProductsJSON) {
-      this.addedProducts = JSON.parse(cartProductsJSON);
-    }
+  <div class="right-menu">
+     <h3>Comparas finalizadas</h3>
+     <ul>
+       <li v-for="(product, index) in addedProducts" :key="index" class="added-product-item">
+         {{ product.title }}
+         <br> 
+         <h4>R$ {{ formatPrice(product.price) }}</h4>
+       </li>
+     </ul>
+     <h4>Total: R$ {{ calculateTotalPrice() }}</h4>
+  </div>
+ </template>
+ 
+ <script>
+ export default {
+  data() {
+     return {
+       addedProducts: []
+     }
   },
-    methods: {
-      formatPrice(price) {
-        return price.toFixed(2);
-      },
-    },
-  };
-  </script>
+  mounted() {
+     // Recupera os produtos do localStorage ao carregar o componente
+     const cartProductsJSON = localStorage.getItem("cartProducts");
+     if (cartProductsJSON) {
+       this.addedProducts = JSON.parse(cartProductsJSON);
+     }
+  },
+  methods: {
+     formatPrice(price) {
+       return price.toFixed(2);
+     },
+     calculateTotalPrice() {
+       return this.addedProducts.reduce((total, product) => total + product.price, 0).toFixed(2);
+     },
+  },
+ };
+ </script>
   
   <style scoped>
   .right-menu {
